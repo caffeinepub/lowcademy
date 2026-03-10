@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  ArrowLeft,
   ArrowRight,
   BarChart3,
   BookOpen,
@@ -36,7 +37,14 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-type Page = "home" | "about" | "corporate" | "programs" | "contact" | "courses";
+type Page =
+  | "home"
+  | "about"
+  | "corporate"
+  | "programs"
+  | "contact"
+  | "courses"
+  | "cohort-details";
 
 // ── Network SVG Background ──────────────────────────────────────────────────
 const NODES_LARGE = [
@@ -1743,6 +1751,599 @@ function ProgramsPage({
   );
 }
 // ── Contact Page ─────────────────────────────────────────────────────────────
+function CohortDetailsPage({
+  onNavigate,
+}: { onNavigate: (page: Page) => void }) {
+  const [applyOpen, setApplyOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    role: "",
+    experience: "",
+    message: "",
+  });
+
+  function handleApplySubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitted(true);
+  }
+
+  function handleDialogClose(open: boolean) {
+    setApplyOpen(open);
+    if (!open) setSubmitted(false);
+  }
+
+  const weeks = [
+    {
+      label: "Week 1 — Foundations",
+      days: [
+        {
+          day: 1,
+          title: "Kickoff & Foundations",
+          activities: [
+            "Live Session: Welcome & Program Overview",
+            "Pre-recorded: Introduction to Enterprise Architecture",
+            "Exercise: Architecture thinking warm-up",
+          ],
+          outcome: "Understand the program structure and enterprise mindset",
+        },
+        {
+          day: 2,
+          title: "OutSystems Platform Deep Dive",
+          activities: [
+            "Live Session: OutSystems Architecture Overview",
+            "Pre-recorded: Platform Capabilities & Limitations",
+            "Hands-on: Build a basic OutSystems module",
+            "Quiz: Platform fundamentals check",
+          ],
+          outcome: "Navigate and understand OutSystems confidently",
+        },
+        {
+          day: 3,
+          title: "System Design Thinking",
+          activities: [
+            "Live Session: How Real Systems Are Designed",
+            "Pre-recorded: System Design Patterns in Low-Code",
+            "Exercise: Design a simple enterprise module",
+            "Quiz: System design concepts",
+          ],
+          outcome: "Apply design thinking to real problems",
+        },
+        {
+          day: 4,
+          title: "Application Scalability",
+          activities: [
+            "Live Session: Designing for Scale",
+            "Pre-recorded: Scalability in OutSystems Applications",
+            "Hands-on: Refactor a module for scalability",
+            "Assignment: Document a scalability decision",
+          ],
+          outcome: "Design scalable application architectures",
+        },
+        {
+          day: 5,
+          title: "Delivery Frameworks",
+          activities: [
+            "Live Session: How Enterprise Teams Deliver Software",
+            "Pre-recorded: Agile + Low-Code Delivery",
+            "Exercise: Map a delivery workflow",
+            "Quiz: Delivery concepts",
+          ],
+          outcome: "Understand delivery in enterprise context",
+        },
+      ],
+    },
+    {
+      label: "Week 2 — Architecture Patterns",
+      days: [
+        {
+          day: 6,
+          title: "Team Collaboration Patterns",
+          activities: [
+            "Live Session: Working in Enterprise Teams",
+            "Pre-recorded: Cross-team Architecture Coordination",
+            "Exercise: Collaboration scenario analysis",
+          ],
+          outcome: "Navigate team dynamics in large projects",
+        },
+        {
+          day: 7,
+          title: "Integration Patterns",
+          activities: [
+            "Live Session: Enterprise Integration Architecture",
+            "Pre-recorded: APIs, Services, and Data Flows",
+            "Hands-on: Build an integration in OutSystems",
+            "Quiz: Integration patterns",
+          ],
+          outcome: "Design integration-ready architectures",
+        },
+        {
+          day: 8,
+          title: "Real Project Case Study (Part 1)",
+          activities: [
+            "Live Session: Analyzing a Real Enterprise Project",
+            "Pre-recorded: Case Study Walkthrough",
+            "Exercise: Identify architecture decisions in the case",
+          ],
+          outcome: "Apply learnings to real-world context",
+        },
+        {
+          day: 9,
+          title: "Real Project Case Study (Part 2)",
+          activities: [
+            "Live Session: Architecture Decisions Deep Dive",
+            "Exercise: Redesign a component of the case study",
+            "Doubt Clearing Session",
+          ],
+          outcome: "Develop architecture judgment",
+        },
+        {
+          day: 10,
+          title: "Mid-Program Review",
+          activities: [
+            "Live Session: Progress Check & Open Discussion",
+            "Quiz: Week 2 Knowledge Review",
+            "Q&A with Instructor",
+          ],
+          outcome: "Consolidate learning from the first half",
+        },
+      ],
+    },
+    {
+      label: "Week 3 — Advanced Concepts",
+      days: [
+        {
+          day: 11,
+          title: "Advanced Architecture Patterns",
+          activities: [
+            "Live Session: Complex System Design in Low-Code",
+            "Pre-recorded: Advanced Patterns & Anti-patterns",
+            "Hands-on: Implement an advanced pattern",
+          ],
+          outcome: "Handle complex architecture scenarios",
+        },
+        {
+          day: 12,
+          title: "Performance & Optimization",
+          activities: [
+            "Live Session: Application Performance in OutSystems",
+            "Pre-recorded: Query Optimization & Caching",
+            "Exercise: Performance analysis exercise",
+            "Quiz: Performance concepts",
+          ],
+          outcome: "Build performant applications",
+        },
+        {
+          day: 13,
+          title: "Security & Governance",
+          activities: [
+            "Live Session: Enterprise Security Architecture",
+            "Pre-recorded: Governance Models for Low-Code",
+            "Exercise: Security review checklist",
+          ],
+          outcome: "Apply security thinking to designs",
+        },
+        {
+          day: 14,
+          title: "Architecture Documentation",
+          activities: [
+            "Live Session: Documenting Enterprise Systems",
+            "Pre-recorded: Architecture Decision Records (ADRs)",
+            "Exercise: Write an ADR for a design decision",
+          ],
+          outcome: "Communicate architecture effectively",
+        },
+        {
+          day: 15,
+          title: "Stakeholder Communication",
+          activities: [
+            "Live Session: Presenting Architecture to Business",
+            "Pre-recorded: Non-technical Communication for Architects",
+            "Exercise: Prepare a mini architecture presentation",
+          ],
+          outcome: "Bridge technical and business conversations",
+        },
+      ],
+    },
+    {
+      label: "Week 4 — Capstone & Assessment",
+      days: [
+        {
+          day: 16,
+          title: "Capstone Project Kickoff",
+          activities: [
+            "Live Session: Project Brief & Requirements",
+            "Pre-recorded: How to Structure Your Project",
+            "Exercise: Define project scope and architecture",
+          ],
+          outcome: "Start building your capstone project",
+        },
+        {
+          day: 17,
+          title: "Capstone Project Work",
+          activities: [
+            "Project Work Session (self-paced)",
+            "Doubt Clearing: Office Hours with Instructor",
+          ],
+          outcome: "Build the core of your capstone project",
+        },
+        {
+          day: 18,
+          title: "Capstone Project Completion",
+          activities: [
+            "Project Work Session (self-paced)",
+            "Peer Review: Share with cohort members",
+          ],
+          outcome: "Complete and refine the capstone project",
+        },
+        {
+          day: 19,
+          title: "Final Review & Preparation",
+          activities: [
+            "Live Session: Program Summary & Key Takeaways",
+            "Revision: Review key concepts from all modules",
+            "Q&A Session: Final Doubt Clearing",
+          ],
+          outcome: "Prepare for the final assessment",
+        },
+        {
+          day: 20,
+          title: "Final Assessment",
+          activities: [
+            "Final Assessment (timed)",
+            "Architecture Design Challenge",
+            "Program Completion & Certificate",
+          ],
+          outcome: "Demonstrate full program mastery",
+          isFinal: true,
+        },
+      ],
+    },
+  ];
+
+  return (
+    <div className="pt-16">
+      {/* Apply Form Dialog */}
+      <Dialog open={applyOpen} onOpenChange={handleDialogClose}>
+        <DialogContent
+          data-ocid="cohort.apply_form.dialog"
+          className="max-w-lg"
+        >
+          <DialogHeader>
+            <DialogTitle className="font-display font-bold text-[#0B1F3A] text-xl">
+              Apply for the Next Cohort
+            </DialogTitle>
+          </DialogHeader>
+          {submitted ? (
+            <div
+              data-ocid="cohort.apply_form.success_state"
+              className="py-8 text-center"
+            >
+              <div className="w-14 h-14 rounded-full bg-[#00D1FF]/10 border-2 border-[#00D1FF]/40 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="text-[#00D1FF]" size={28} />
+              </div>
+              <p className="text-[#0B1F3A] font-semibold text-base leading-relaxed">
+                Thank you for applying. Our team will review your application
+                and get back to you shortly.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleApplySubmit} className="space-y-4 mt-2">
+              <div>
+                <Label
+                  htmlFor="cohort-apply-name"
+                  className="text-[#0B1F3A] font-medium mb-1 block"
+                >
+                  Name
+                </Label>
+                <Input
+                  id="cohort-apply-name"
+                  data-ocid="cohort.apply_form.input"
+                  required
+                  placeholder="Your full name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData((p) => ({ ...p, name: e.target.value }))
+                  }
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="cohort-apply-email"
+                  className="text-[#0B1F3A] font-medium mb-1 block"
+                >
+                  Email
+                </Label>
+                <Input
+                  id="cohort-apply-email"
+                  type="email"
+                  required
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData((p) => ({ ...p, email: e.target.value }))
+                  }
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="cohort-apply-role"
+                  className="text-[#0B1F3A] font-medium mb-1 block"
+                >
+                  Current Role
+                </Label>
+                <Input
+                  id="cohort-apply-role"
+                  required
+                  placeholder="e.g. Software Developer"
+                  value={formData.role}
+                  onChange={(e) =>
+                    setFormData((p) => ({ ...p, role: e.target.value }))
+                  }
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="cohort-apply-exp"
+                  className="text-[#0B1F3A] font-medium mb-1 block"
+                >
+                  Years of Experience
+                </Label>
+                <Input
+                  id="cohort-apply-exp"
+                  required
+                  placeholder="e.g. 3"
+                  value={formData.experience}
+                  onChange={(e) =>
+                    setFormData((p) => ({ ...p, experience: e.target.value }))
+                  }
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="cohort-apply-msg"
+                  className="text-[#0B1F3A] font-medium mb-1 block"
+                >
+                  Message
+                </Label>
+                <Textarea
+                  id="cohort-apply-msg"
+                  placeholder="Tell us about yourself and why you want to join..."
+                  rows={4}
+                  value={formData.message}
+                  onChange={(e) =>
+                    setFormData((p) => ({ ...p, message: e.target.value }))
+                  }
+                />
+              </div>
+              <Button
+                type="submit"
+                data-ocid="cohort.apply_form.submit_button"
+                className="w-full bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold h-11 rounded-md transition-all"
+              >
+                Submit Application
+              </Button>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Hero */}
+      <section
+        data-ocid="cohort.hero.section"
+        className="relative bg-[#0B1F3A] py-24 lg:py-32 overflow-hidden"
+      >
+        <NetworkBackground />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <button
+            data-ocid="cohort.hero.button"
+            type="button"
+            onClick={() => onNavigate("programs")}
+            className="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm font-medium mb-8 transition-colors"
+          >
+            <ArrowLeft size={16} />
+            Back to Programs
+          </button>
+          <Badge className="mb-6 bg-[#00D1FF]/10 text-[#00D1FF] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
+            Cohort Curriculum
+          </Badge>
+          <h1 className="font-display font-black text-white text-4xl sm:text-5xl lg:text-6xl tracking-tight mb-6">
+            OutSystems Architecture Accelerator
+          </h1>
+          <p className="text-white/60 text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl">
+            A structured 4-week live cohort with day-by-day learning progression
+            designed to build real enterprise architecture thinking.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white text-sm font-medium">
+              <Clock size={14} />4 Weeks · 20 Days
+            </span>
+            <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white text-sm font-medium">
+              <Globe size={14} />
+              Live Online
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Curriculum */}
+      <section
+        data-ocid="cohort.curriculum.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <Badge className="mb-4 bg-[#00D1FF]/10 text-[#0B1F3A] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
+              Full Curriculum
+            </Badge>
+            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-4">
+              Day-by-Day Curriculum
+            </h2>
+            <p className="text-gray-600 text-base leading-relaxed max-w-2xl mx-auto">
+              Every day is structured for maximum learning — live sessions,
+              self-paced content, exercises, and reflection.
+            </p>
+          </div>
+          <div className="space-y-12">
+            {weeks.map((week) => (
+              <div key={week.label}>
+                {/* Week divider */}
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="flex-1 h-px bg-[#00D1FF]/20" />
+                  <span className="text-xs font-bold tracking-wider uppercase text-[#00D1FF] bg-[#00D1FF]/10 border border-[#00D1FF]/20 rounded-full px-4 py-1.5">
+                    {week.label}
+                  </span>
+                  <div className="flex-1 h-px bg-[#00D1FF]/20" />
+                </div>
+                <div className="relative">
+                  {/* Vertical line */}
+                  <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-[#0B1F3A]/10 hidden sm:block" />
+                  <div className="space-y-6">
+                    {week.days.map((d) => (
+                      <div
+                        key={d.day}
+                        data-ocid={`cohort.curriculum.item.${d.day}`}
+                        className="relative flex gap-6 items-start"
+                      >
+                        {/* Day circle */}
+                        <div
+                          className={`relative z-10 flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm border-2 ${
+                            d.isFinal
+                              ? "bg-[#00D1FF] border-[#00D1FF] text-[#0B1F3A]"
+                              : "bg-white border-[#00D1FF] text-[#0B1F3A]"
+                          }`}
+                        >
+                          {d.isFinal ? (
+                            <CheckCircle2 size={20} />
+                          ) : (
+                            <span>{d.day}</span>
+                          )}
+                        </div>
+                        {/* Day card */}
+                        <div
+                          className={`flex-1 rounded-xl p-5 border ${
+                            d.isFinal
+                              ? "bg-[#0B1F3A] border-[#00D1FF]/30"
+                              : "bg-[#F7F9FC] border-gray-100"
+                          }`}
+                        >
+                          <h3
+                            className={`font-display font-bold text-base mb-3 ${d.isFinal ? "text-[#00D1FF]" : "text-[#0B1F3A]"}`}
+                          >
+                            Day {d.day} — {d.title}
+                          </h3>
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {d.activities.map((a) => (
+                              <span
+                                key={a}
+                                className={`text-xs px-3 py-1 rounded-full font-medium ${
+                                  d.isFinal
+                                    ? "bg-[#00D1FF]/20 text-[#00D1FF]"
+                                    : "bg-white text-[#0B1F3A] border border-gray-200"
+                                }`}
+                              >
+                                {a}
+                              </span>
+                            ))}
+                          </div>
+                          <p
+                            className={`text-xs font-semibold ${d.isFinal ? "text-[#00D1FF]/80" : "text-[#00D1FF]"}`}
+                          >
+                            ✦ Outcome: {d.outcome}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Program Details */}
+      <section
+        data-ocid="cohort.details.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 bg-[#00D1FF]/10 text-[#0B1F3A] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
+              Program Overview
+            </Badge>
+            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight">
+              Program Details
+            </h2>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-6 mb-10">
+            {[
+              { icon: Clock, label: "Duration", value: "4 Weeks · 20 Days" },
+              { icon: Globe, label: "Format", value: "Live Online Cohort" },
+              { icon: Users, label: "Seats", value: "Limited Enrollment" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="bg-white rounded-xl p-6 border border-gray-100 text-center shadow-sm"
+              >
+                <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-4 mx-auto">
+                  <item.icon className="text-[#00D1FF]" size={20} />
+                </div>
+                <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-1">
+                  {item.label}
+                </p>
+                <p className="font-display font-bold text-[#0B1F3A] text-base">
+                  {item.value}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="bg-white rounded-xl p-7 border border-gray-100 shadow-sm flex items-center gap-6">
+            <div className="w-16 h-16 rounded-full bg-[#0B1F3A] border-2 border-[#00D1FF]/30 flex items-center justify-center flex-shrink-0">
+              <GraduationCap className="text-[#00D1FF]" size={28} />
+            </div>
+            <div>
+              <p className="font-display font-black text-[#0B1F3A] text-lg">
+                Ankit Gangrade
+              </p>
+              <p className="text-gray-500 text-sm">
+                Enterprise Software Architect · Principal Consultant · Founder,
+                Lowcademy
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section
+        data-ocid="cohort.cta.section"
+        className="relative bg-[#0B1F3A] py-20 lg:py-28 overflow-hidden"
+      >
+        <NetworkBackground />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-display font-black text-white text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-4">
+            Ready to Join the Cohort?
+          </h2>
+          <p className="text-white/60 text-lg leading-relaxed mb-10">
+            Limited seats for each cohort to ensure high-quality, interactive
+            learning.
+          </p>
+          <Button
+            data-ocid="cohort.cta.primary_button"
+            onClick={() => setApplyOpen(true)}
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-10 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
+          >
+            Apply Now
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function ContactPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -2765,6 +3366,8 @@ export default function App() {
           <ContactPage onNavigate={handleNavigate} />
         ) : currentPage === "courses" ? (
           <CoursesPage onNavigate={handleNavigate} />
+        ) : currentPage === "cohort-details" ? (
+          <CohortDetailsPage onNavigate={handleNavigate} />
         ) : (
           <CorporateTrainingPage />
         )}
