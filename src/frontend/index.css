@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wdth,wght@0,75..125,200..900;1,75..125,200..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* Lowcademy Brand Palette — OKLCH raw L C H */
+    /* Deep Navy #0B1F3A */
+    --navy: 0.18 0.05 243;
+    /* Electric Cyan #00D1FF */
+    --cyan: 0.78 0.15 210;
+    /* White */
+    --background: 1 0 0;
+    --foreground: 0.18 0.05 243;
+    /* Light Grey #F7F9FC */
+    --muted: 0.975 0.005 243;
+    --muted-foreground: 0.45 0.03 243;
+
+    /* Semantic mappings */
+    --primary: 0.18 0.05 243;
+    --primary-foreground: 1 0 0;
+    --secondary: 0.975 0.005 243;
+    --secondary-foreground: 0.18 0.05 243;
+    --accent: 0.78 0.15 210;
+    --accent-foreground: 0.18 0.05 243;
+    --card: 1 0 0;
+    --card-foreground: 0.18 0.05 243;
+    --popover: 1 0 0;
+    --popover-foreground: 0.18 0.05 243;
+    --border: 0.91 0.01 243;
+    --input: 0.91 0.01 243;
+    --ring: 0.78 0.15 210;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 1 0 0;
+
+    --chart-1: 0.646 0.222 41.116;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+
+    --sidebar: 0.18 0.05 243;
+    --sidebar-foreground: 1 0 0;
+    --sidebar-primary: 0.78 0.15 210;
+    --sidebar-primary-foreground: 0.18 0.05 243;
+    --sidebar-accent: 0.22 0.06 243;
+    --sidebar-accent-foreground: 1 0 0;
+    --sidebar-border: 0.25 0.04 243;
+    --sidebar-ring: 0.78 0.15 210;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'General Sans', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Mona Sans', 'General Sans', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Mona Sans', 'General Sans', system-ui, sans-serif;
+  }
+
+  .text-navy {
+    color: oklch(var(--navy));
+  }
+
+  .bg-navy {
+    background-color: oklch(var(--navy));
+  }
+
+  .text-cyan {
+    color: oklch(var(--cyan));
+  }
+
+  .bg-cyan {
+    background-color: oklch(var(--cyan));
+  }
+
+  .border-cyan {
+    border-color: oklch(var(--cyan));
+  }
+
+  .bg-muted-section {
+    background-color: #F7F9FC;
+  }
+
+  .network-pattern {
+    background-image:
+      radial-gradient(circle at 20% 50%, oklch(0.78 0.15 210 / 0.06) 0px, transparent 50%),
+      radial-gradient(circle at 80% 20%, oklch(0.78 0.15 210 / 0.05) 0px, transparent 40%),
+      radial-gradient(circle at 60% 80%, oklch(0.78 0.15 210 / 0.04) 0px, transparent 40%);
+  }
+
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 209, 255, 0.08);
+  }
+
+  .cyan-top-border {
+    border-top: 2px solid oklch(var(--cyan));
+  }
+}
