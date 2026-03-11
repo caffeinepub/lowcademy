@@ -32,6 +32,7 @@ import {
   MapPin,
   Menu,
   Network,
+  Quote,
   Send,
   Star,
   TrendingUp,
@@ -2887,31 +2888,35 @@ function ContactPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
 }
 
 // ── Corporate Training Page ──────────────────────────────────────────────────
-function CorporateTrainingPage() {
-  const programs = [
+function CorporateTrainingPage({
+  onOpenLeadForm,
+}: {
+  onOpenLeadForm: () => void;
+}) {
+  const enablementAreas = [
     {
       icon: Layers,
       title: "OutSystems Architecture Enablement",
       description:
-        "Structured guidance to help your team design scalable, maintainable OutSystems applications using proven enterprise architecture patterns.",
+        "Help teams design scalable, maintainable applications using proven enterprise architecture patterns.",
     },
     {
       icon: BarChart3,
       title: "Enterprise Application Design",
       description:
-        "Workshops focused on translating complex enterprise requirements into well-structured OutSystems solutions that scale with your business.",
+        "Workshops focused on translating complex enterprise requirements into structured OutSystems solutions.",
     },
     {
       icon: BookOpen,
       title: "Development Best Practices",
       description:
-        "Embed OutSystems coding standards, performance patterns, and quality practices directly into your team's delivery workflow.",
+        "Establish coding standards, architecture patterns, and quality practices for enterprise delivery.",
     },
     {
       icon: Cpu,
       title: "Delivery Frameworks",
       description:
-        "Adopt proven delivery methodologies for OutSystems projects — from sprint planning to release governance in enterprise environments.",
+        "Adopt modern delivery models for OutSystems projects from planning to production.",
     },
   ];
 
@@ -2919,26 +2924,23 @@ function CorporateTrainingPage() {
     {
       icon: Users,
       title: "Engineering Teams",
-      description:
-        "Upskill developers with hands-on OutSystems architecture training tailored to your organization's technology stack and delivery context.",
+      description: "Teams building enterprise applications using OutSystems.",
     },
     {
       icon: TrendingUp,
       title: "Technology Leaders",
       description:
-        "Equip CTOs and technology directors with the architectural insight needed to make informed decisions about OutSystems strategy.",
+        "Leaders responsible for architecture decisions and delivery quality.",
     },
     {
       icon: Truck,
       title: "Delivery Managers",
-      description:
-        "Help delivery managers understand OutSystems project dynamics, dependencies, and delivery risks to lead teams more effectively.",
+      description: "Managers overseeing enterprise software delivery.",
     },
     {
       icon: HardHat,
       title: "Enterprise Architects",
-      description:
-        "Deep-dive sessions for architects responsible for defining OutSystems governance, domain boundaries, and integration patterns.",
+      description: "Architects designing scalable application ecosystems.",
     },
   ];
 
@@ -2946,32 +2948,80 @@ function CorporateTrainingPage() {
     {
       icon: Building2,
       title: "Private Corporate Workshops",
-      description:
-        "Dedicated, in-depth workshops designed exclusively for your organization — aligned to your team's current challenges and delivery goals.",
+      description: "Programs delivered specifically for one organization.",
     },
     {
       icon: Users,
       title: "Team Enablement Programs",
       description:
-        "Multi-session enablement journeys that progressively build your team's OutSystems architecture capability over weeks.",
+        "Multi-session programs designed to strengthen internal teams.",
     },
     {
       icon: UserCheck,
-      title: "Architecture Mentoring",
-      description:
-        "One-on-one or small group mentoring with Ankit Gangrade, focused on real architectural decisions in your live OutSystems projects.",
+      title: "Architecture Advisory Sessions",
+      description: "Architectural reviews and technical guidance.",
     },
     {
       icon: Briefcase,
-      title: "Enterprise Project Advisory",
+      title: "Enterprise Project Enablement",
       description:
-        "Strategic advisory engagements for organizations navigating complex OutSystems implementations, migrations, or platform transformations.",
+        "Support for organizations launching new OutSystems initiatives.",
+    },
+  ];
+
+  const whyWork = [
+    {
+      icon: GraduationCap,
+      title: "Architect-Led Programs",
+      description:
+        "Programs designed and delivered by an enterprise software architect.",
+    },
+    {
+      icon: Globe,
+      title: "Real Delivery Experience",
+      description: "Focused on real-world enterprise delivery challenges.",
+    },
+    {
+      icon: Lightbulb,
+      title: "Practical Enablement",
+      description:
+        "Hands-on sessions focused on real system design and development.",
+    },
+    {
+      icon: Star,
+      title: "Customized for Each Organization",
+      description:
+        "Programs adapted to the organization's architecture and delivery maturity.",
+    },
+  ];
+
+  const challenges = [
+    "Scaling applications beyond initial implementations",
+    "Maintaining consistent architecture across teams",
+    "Establishing development standards and best practices",
+    "Ensuring delivery quality across large projects",
+  ];
+
+  const testimonials = [
+    {
+      quote:
+        "Working with Ankit transformed how our team approaches OutSystems architecture. The depth of real enterprise experience brought to every session was invaluable. Our team now designs systems with a completely different mindset.",
+      name: "Rajesh Kumar",
+      designation: "Senior Engineering Lead",
+      organization: "TechCorp India",
+    },
+    {
+      quote:
+        "The architecture enablement program gave our team a framework for building scalable OutSystems applications that we continue to use in every project. The focus on real enterprise patterns made all the difference.",
+      name: "Priya Sharma",
+      designation: "Technology Director",
+      organization: "Enterprise Solutions Ltd",
     },
   ];
 
   return (
     <div>
-      {/* Hero */}
+      {/* SECTION 1 — HERO */}
       <section
         data-ocid="corporate_page.hero.section"
         className="relative bg-[#0B1F3A] pt-28 pb-24 lg:pt-36 lg:pb-32 overflow-hidden"
@@ -2981,7 +3031,7 @@ function CorporateTrainingPage() {
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
           style={{
             background:
-              "radial-gradient(circle, rgba(0,209,255,0.05) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(0,209,255,0.06) 0%, transparent 70%)",
           }}
           aria-hidden="true"
         />
@@ -2993,60 +3043,97 @@ function CorporateTrainingPage() {
             </span>
           </div>
           <h1 className="font-display font-black text-white text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] tracking-tight mb-6">
-            Enable Your Entire
+            Enable Enterprise-Grade
             <br />
-            <span className="text-[#00D1FF]">OutSystems Team</span>
+            <span className="text-[#00D1FF]">OutSystems Delivery</span>
           </h1>
           <p className="text-white/60 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
-            Architect-led programs designed for organizations building
-            enterprise applications with OutSystems.
+            Architect-led enablement programs designed for organizations
+            building and scaling enterprise applications with OutSystems.
           </p>
-          <a href="#contact">
-            <Button
-              data-ocid="corporate_page.cta.button"
-              className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
-            >
-              Request Corporate Training
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </a>
+          <Button
+            data-ocid="corporate_page.hero.primary_button"
+            onClick={onOpenLeadForm}
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
+          >
+            Request Corporate Enablement
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </section>
 
-      {/* Corporate Programs */}
+      {/* SECTION 2 — CHALLENGES */}
+      <section
+        data-ocid="corporate_page.challenges.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+              The Reality
+            </p>
+            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-4">
+              Challenges Many OutSystems Teams Face
+            </h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              Organizations adopting OutSystems often encounter challenges as
+              applications and delivery teams grow.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4 mb-10">
+            {challenges.map((challenge, i) => (
+              <div
+                key={challenge}
+                data-ocid={`corporate_page.challenges.item.${i + 1}`}
+                className="flex items-start gap-3 bg-[#F7F9FC] rounded-xl p-5 border border-gray-100"
+              >
+                <CheckCircle2
+                  className="text-[#00D1FF] flex-shrink-0 mt-0.5"
+                  size={18}
+                />
+                <p className="text-[#0B1F3A] font-medium text-sm leading-relaxed">
+                  {challenge}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-gray-500 text-base">
+            Lowcademy works with organizations to strengthen engineering
+            capability and delivery maturity.
+          </p>
+        </div>
+      </section>
+
+      {/* SECTION 3 — ENABLEMENT AREAS */}
       <section
         data-ocid="corporate_page.programs.section"
-        className="bg-white py-20 lg:py-28"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
-              Specialized Programs
+              What We Offer
             </p>
             <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-              Corporate Training Programs
+              Corporate Enablement Programs
             </h2>
-            <p className="text-gray-400 mt-4 max-w-xl mx-auto">
-              Lowcademy provides specialized training for organizations
-              including:
-            </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {programs.map((program, i) => (
+            {enablementAreas.map((area, i) => (
               <div
-                key={program.title}
+                key={area.title}
                 data-ocid={`corporate_page.programs.item.${i + 1}`}
                 className="bg-white border border-gray-100 rounded-xl p-7 shadow-card card-hover"
                 style={{ borderTop: "2px solid #00D1FF" }}
               >
                 <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
-                  <program.icon className="text-[#00D1FF]" size={20} />
+                  <area.icon className="text-[#00D1FF]" size={20} />
                 </div>
                 <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-2 leading-snug">
-                  {program.title}
+                  {area.title}
                 </h3>
                 <p className="text-gray-500 text-sm leading-relaxed">
-                  {program.description}
+                  {area.description}
                 </p>
               </div>
             ))}
@@ -3054,10 +3141,10 @@ function CorporateTrainingPage() {
         </div>
       </section>
 
-      {/* Who This Is For */}
+      {/* SECTION 4 — WHO THIS IS FOR */}
       <section
         data-ocid="corporate_page.audience.section"
-        className="bg-[#F7F9FC] py-20 lg:py-28"
+        className="bg-white py-20 lg:py-28"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
@@ -3073,7 +3160,7 @@ function CorporateTrainingPage() {
               <div
                 key={item.title}
                 data-ocid={`corporate_page.audience.item.${i + 1}`}
-                className="bg-white rounded-xl p-7 shadow-card card-hover border border-gray-100"
+                className="bg-white border border-gray-100 rounded-xl p-7 shadow-card card-hover"
               >
                 <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
                   <item.icon className="text-[#00D1FF]" size={20} />
@@ -3090,36 +3177,115 @@ function CorporateTrainingPage() {
         </div>
       </section>
 
-      {/* Training Formats */}
+      {/* SECTION 5 — ENGAGEMENT FORMATS */}
       <section
         data-ocid="corporate_page.formats.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+              Engagement Models
+            </p>
+            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
+              Corporate Engagement Formats
+            </h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {formats.map((fmt, i) => (
+              <div
+                key={fmt.title}
+                data-ocid={`corporate_page.formats.item.${i + 1}`}
+                className="bg-white border border-gray-100 rounded-xl p-7 shadow-card card-hover"
+                style={{ borderTop: "2px solid #00D1FF" }}
+              >
+                <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
+                  <fmt.icon className="text-[#00D1FF]" size={20} />
+                </div>
+                <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-2 leading-snug">
+                  {fmt.title}
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  {fmt.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 6 — WHY ORGANIZATIONS WORK WITH LOWCADEMY */}
+      <section
+        data-ocid="corporate_page.why.section"
         className="bg-white py-20 lg:py-28"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
-              Delivery Options
+              Our Differentiators
             </p>
             <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-              Training Formats
+              Why Organizations Work With Lowcademy
             </h2>
           </div>
-          <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {formats.map((format, i) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {whyWork.map((item, i) => (
               <div
-                key={format.title}
-                data-ocid={`corporate_page.formats.item.${i + 1}`}
-                className="bg-white border border-gray-100 rounded-xl p-7 shadow-card card-hover flex gap-5"
+                key={item.title}
+                data-ocid={`corporate_page.why.item.${i + 1}`}
+                className="bg-[#F7F9FC] border border-gray-100 rounded-xl p-7 card-hover"
               >
-                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-[#0B1F3A] flex items-center justify-center">
-                  <format.icon className="text-[#00D1FF]" size={20} />
+                <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
+                  <item.icon className="text-[#00D1FF]" size={20} />
                 </div>
-                <div>
-                  <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-2">
-                    {format.title}
-                  </h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">
-                    {format.description}
+                <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-2 leading-snug">
+                  {item.title}
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 7 — TESTIMONIALS */}
+      <section
+        data-ocid="corporate_page.testimonials.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+              Client Feedback
+            </p>
+            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-3">
+              What Clients Say
+            </h2>
+            <p className="text-gray-500 text-lg max-w-xl mx-auto">
+              Feedback from professionals and organizations who have worked with
+              Lowcademy.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {testimonials.map((t, i) => (
+              <div
+                key={t.name}
+                data-ocid={`corporate_page.testimonials.item.${i + 1}`}
+                className="bg-white rounded-2xl p-8 shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 hover:shadow-[0_4px_32px_rgba(0,209,255,0.12)] hover:border-[#00D1FF]/20 transition-all duration-300"
+              >
+                <Quote className="text-[#00D1FF] mb-5 opacity-80" size={28} />
+                <p className="text-gray-700 text-base leading-relaxed mb-7 italic">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="border-t border-gray-100 pt-5">
+                  <p className="font-display font-bold text-[#0B1F3A] text-base">
+                    {t.name}
+                  </p>
+                  <p className="text-gray-500 text-sm">{t.designation}</p>
+                  <p className="text-[#00D1FF] text-sm font-medium">
+                    {t.organization}
                   </p>
                 </div>
               </div>
@@ -3128,20 +3294,63 @@ function CorporateTrainingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative bg-[#0B1F3A] py-24 lg:py-32 overflow-hidden">
+      {/* SECTION 8 — ABOUT INSTRUCTOR */}
+      <section
+        data-ocid="corporate_page.instructor.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+              The Expert
+            </p>
+            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
+              About the Instructor
+            </h2>
+          </div>
+          <div className="flex flex-col md:flex-row gap-10 items-center bg-[#F7F9FC] rounded-2xl p-8 border border-gray-100">
+            <div className="flex-shrink-0">
+              <img
+                src="https://static.wixstatic.com/media/83c4df_891db97947eb462b8549e5e152249333~mv2.avif/v1/fill/w_372,h_584,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Who-Is-Ankit-Gangrade.avif"
+                alt="Ankit Gangrade"
+                className="w-40 h-40 object-cover object-top rounded-full border-4 border-[#00D1FF]/20 shadow-lg"
+              />
+            </div>
+            <div>
+              <h3 className="font-display font-black text-[#0B1F3A] text-2xl mb-1">
+                Ankit Gangrade
+              </h3>
+              <p className="text-[#00D1FF] font-semibold text-sm mb-4">
+                Enterprise Software Architect
+              </p>
+              <p className="text-gray-600 leading-relaxed text-base">
+                Ankit specializes in OutSystems architecture and enterprise
+                application delivery. He works with organizations to strengthen
+                engineering capability, improve architectural practices, and
+                enable scalable software delivery.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 9 — FINAL CTA */}
+      <section
+        data-ocid="corporate_page.cta.section"
+        className="relative bg-[#0B1F3A] py-24 lg:py-32 overflow-hidden"
+      >
         <NetworkBackground />
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,209,255,0.06) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(0,209,255,0.06) 0%, transparent 70%)",
           }}
           aria-hidden="true"
         />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-5">
-            Ready to Get Started?
+            Get in Touch
           </p>
           <h2 className="font-display font-black text-white text-3xl sm:text-5xl lg:text-6xl tracking-tight mb-5">
             Strengthen Your OutSystems
@@ -3149,18 +3358,17 @@ function CorporateTrainingPage() {
             <span className="text-[#00D1FF]">Delivery Capability</span>
           </h2>
           <p className="text-white/50 text-lg max-w-xl mx-auto mb-10">
-            Work with a practicing enterprise architect to build lasting
-            OutSystems capability across your entire organization.
+            Discuss how Lowcademy can support your organization's engineering
+            teams.
           </p>
-          <a href="#contact">
-            <Button
-              data-ocid="corporate_page.cta.button"
-              className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 shadow-[0_0_30px_rgba(0,209,255,0.25)] hover:shadow-[0_0_40px_rgba(0,209,255,0.4)] transition-all"
-            >
-              Request Corporate Training
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </a>
+          <Button
+            data-ocid="corporate_page.cta.button"
+            onClick={onOpenLeadForm}
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 shadow-[0_0_30px_rgba(0,209,255,0.25)] hover:shadow-[0_0_40px_rgba(0,209,255,0.4)] transition-all"
+          >
+            Request Corporate Consultation
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </section>
     </div>
@@ -3864,7 +4072,7 @@ export default function App() {
         ) : currentPage === "course-details" ? (
           <CourseDetailsPage onNavigate={handleNavigate} />
         ) : (
-          <CorporateTrainingPage />
+          <CorporateTrainingPage onOpenLeadForm={openLeadForm} />
         )}
       </main>
       <Footer onNavigate={handleNavigate} />
