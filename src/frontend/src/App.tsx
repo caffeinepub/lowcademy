@@ -16,19 +16,24 @@ import {
   BookOpen,
   Briefcase,
   Building2,
+  Calendar,
   CheckCircle2,
   ChevronRight,
   Clock,
+  Cloud,
+  Code2,
   Cpu,
   Globe,
   GraduationCap,
   HardHat,
   Layers,
+  Lightbulb,
   Mail,
   MapPin,
   Menu,
   Network,
   Send,
+  Star,
   TrendingUp,
   Truck,
   UserCheck,
@@ -44,7 +49,16 @@ type Page =
   | "programs"
   | "contact"
   | "courses"
-  | "cohort-details";
+  | "cohort-details"
+  | "course-details";
+
+// ── Cohort Config (edit these values to update cohort details) ──────────────
+const COHORT_CONFIG = {
+  programTitle: "OutSystems + ODC + Agentic AI Career Accelerator",
+  startDate: "July 2026",
+  duration: "8 Weeks",
+  landingUrl: "#", // Update with real cohort landing page URL
+};
 
 // ── Network SVG Background ──────────────────────────────────────────────────
 const NODES_LARGE = [
@@ -191,9 +205,10 @@ function NetworkBackground() {
 interface HeaderProps {
   currentPage: Page;
   onNavigate: (page: Page) => void;
+  onOpenLeadForm: () => void;
 }
 
-function Header({ currentPage, onNavigate }: HeaderProps) {
+function Header({ currentPage, onNavigate, onOpenLeadForm }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -215,7 +230,7 @@ function Header({ currentPage, onNavigate }: HeaderProps) {
     setMobileOpen(false);
   };
 
-  const handleHashLink = (hash: string) => (e: React.MouseEvent) => {
+  const _handleHashLink = (hash: string) => (e: React.MouseEvent) => {
     e.preventDefault();
     setMobileOpen(false);
     if (currentPage !== "home") {
@@ -340,7 +355,7 @@ function Header({ currentPage, onNavigate }: HeaderProps) {
           <div className="hidden md:flex items-center">
             <Button
               data-ocid="nav.get_started.button"
-              onClick={handleHashLink("#programs")}
+              onClick={onOpenLeadForm}
               className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-semibold text-sm px-5 h-9 rounded-md transition-colors"
             >
               Get Started
@@ -445,7 +460,7 @@ function Header({ currentPage, onNavigate }: HeaderProps) {
             <Button
               data-ocid="nav.mobile.get_started.button"
               className="w-full mt-2 bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-semibold"
-              onClick={handleHashLink("#programs")}
+              onClick={onOpenLeadForm}
             >
               Get Started
             </Button>
@@ -457,7 +472,7 @@ function Header({ currentPage, onNavigate }: HeaderProps) {
 }
 
 // ── Hero Section ────────────────────────────────────────────────────────────
-function HeroSection() {
+function HeroSection({ onOpenLeadForm }: { onOpenLeadForm: () => void }) {
   return (
     <section
       id="home"
@@ -485,51 +500,48 @@ function HeroSection() {
           <br />
           <span className="text-[#00D1FF]">Enterprise Architects</span>
           <br />
-          Actually Build Systems
+          Actually Design Systems
         </h1>
 
         <p className="text-white/60 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
-          Programs designed and taught by{" "}
+          Architect-led learning by{" "}
           <span className="text-white font-medium">Ankit Gangrade</span> — a
-          practicing Enterprise Software Architect. Learn architecture thinking,
-          enterprise delivery practices, and real-world low-code development.
+          practicing Enterprise Architect helping developers understand real
+          enterprise system design, architecture thinking, and delivery
+          practices.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="#programs">
-            <Button
-              data-ocid="hero.explore_programs.button"
-              className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
-            >
-              Explore Programs
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </a>
-          <a href="#corporate">
-            <Button
-              data-ocid="hero.corporate_training.button"
-              variant="outline"
-              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 font-semibold text-base px-8 h-12 rounded-md bg-transparent transition-all"
-            >
-              Corporate Training
-            </Button>
-          </a>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+          <Button
+            data-ocid="hero.explore_programs.button"
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
+          >
+            Explore Programs
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          <Button
+            data-ocid="hero.join_cohort.button"
+            variant="outline"
+            onClick={onOpenLeadForm}
+            className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 font-semibold text-base px-8 h-12 rounded-md bg-transparent transition-all"
+          >
+            Join Next Cohort
+          </Button>
         </div>
 
-        <div className="mt-16 flex flex-wrap justify-center gap-8 lg:gap-16">
+        <div className="flex flex-wrap justify-center gap-3">
           {[
-            { value: "10+", label: "Years Enterprise Experience" },
-            { value: "500+", label: "Developers Trained" },
-            { value: "3", label: "Flagship Programs" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-[#00D1FF] font-display font-black text-3xl">
-                {stat.value}
-              </div>
-              <div className="text-white/40 text-xs mt-1 tracking-wide">
-                {stat.label}
-              </div>
-            </div>
+            "10+ Years Enterprise Experience",
+            "500+ Professionals Impacted",
+            "Real Enterprise System Experience",
+          ].map((item) => (
+            <span
+              key={item}
+              className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 text-white/60 text-xs font-medium"
+            >
+              <span className="w-1 h-1 rounded-full bg-[#00D1FF]" />
+              {item}
+            </span>
           ))}
         </div>
       </div>
@@ -541,30 +553,30 @@ function HeroSection() {
 function WhoHelpsSection() {
   const cards = [
     {
-      icon: Building2,
-      title: "Corporate Teams",
+      icon: GraduationCap,
+      title: "Students",
       description:
-        "Enable development teams with enterprise-grade OutSystems capabilities, architecture thinking, and delivery frameworks.",
-      tag: "Team Enablement",
+        "Helping graduates move beyond academic knowledge and understand real enterprise software development.",
+      tag: "Foundational Skills",
     },
     {
       icon: Briefcase,
       title: "Software Professionals",
       description:
-        "Upgrade your skills for low-code engineering, enterprise architecture, and AI-assisted development. Grow from developer to architect.",
+        "Helping developers move from coding mindset to architecture and system design thinking.",
       tag: "Career Growth",
     },
     {
-      icon: GraduationCap,
-      title: "Students",
+      icon: Building2,
+      title: "Organizations",
       description:
-        "Build real industry-ready software engineering skills beyond academic learning. Start your enterprise software journey right.",
-      tag: "Foundational Skills",
+        "Helping companies enable their OutSystems teams to deliver enterprise-grade applications.",
+      tag: "Team Enablement",
     },
   ];
 
   return (
-    <section id="who" className="bg-white py-20 lg:py-28">
+    <section id="who" className="bg-[#F7F9FC] py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
           <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
@@ -575,11 +587,11 @@ function WhoHelpsSection() {
           </h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
-          {cards.map((card) => (
+          {cards.map((card, i) => (
             <div
               key={card.title}
+              data-ocid={`who.card.${i + 1}`}
               className="group bg-white border border-gray-100 rounded-xl p-8 card-hover shadow-card"
-              style={{ borderTop: "2px solid #00D1FF" }}
             >
               <div className="mb-5">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-[#00D1FF]/10">
@@ -603,6 +615,210 @@ function WhoHelpsSection() {
   );
 }
 
+// ── Meet the Architect ───────────────────────────────────────────────────────
+function MeetTheArchitectSection({
+  onNavigate,
+}: { onNavigate: (page: Page) => void }) {
+  const credentials = [
+    "Enterprise Software Architect",
+    "Principal Consultant",
+    "OutSystems Specialist",
+  ];
+
+  return (
+    <section id="architect" className="bg-white py-20 lg:py-28">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-14 lg:hidden">
+          <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+            The Architect
+          </p>
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight">
+            Meet the Architect Behind Lowcademy
+          </h2>
+        </div>
+        <div className="grid lg:grid-cols-2 gap-14 items-center">
+          <div className="relative order-last lg:order-first">
+            <div
+              className="absolute -inset-4 rounded-2xl opacity-30 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(circle at 50% 50%, rgba(0,209,255,0.15), transparent 70%)",
+              }}
+              aria-hidden="true"
+            />
+            <div className="relative rounded-2xl overflow-hidden border border-gray-100 shadow-card max-w-sm mx-auto">
+              <img
+                src="https://static.wixstatic.com/media/83c4df_891db97947eb462b8549e5e152249333~mv2.avif/v1/fill/w_372,h_584,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Who-Is-Ankit-Gangrade.avif"
+                alt="Ankit Gangrade — Enterprise Software Architect and Principal Consultant"
+                className="w-full object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-4 -right-4 lg:right-4 bg-[#0B1F3A] text-white rounded-xl px-5 py-3 shadow-xl">
+              <div className="text-[#00D1FF] font-display font-black text-2xl">
+                10+
+              </div>
+              <div className="text-white/60 text-xs mt-0.5">
+                Years Enterprise
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="hidden lg:block mb-4">
+              <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+                The Architect
+              </p>
+              <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-2">
+                Meet the Architect Behind Lowcademy
+              </h2>
+            </div>
+            <h3 className="font-display font-black text-[#0B1F3A] text-2xl sm:text-3xl mt-2 mb-1">
+              Ankit Gangrade
+            </h3>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {credentials.map((c) => (
+                <Badge
+                  key={c}
+                  className="bg-[#00D1FF]/10 text-[#0B1F3A] border border-[#00D1FF]/30 text-xs font-medium px-3 py-1"
+                >
+                  {c}
+                </Badge>
+              ))}
+            </div>
+            <p className="text-gray-500 text-lg leading-relaxed mb-4">
+              Lowcademy is led by a practicing architect who designs and
+              delivers real enterprise systems. Ankit Gangrade works with
+              organizations to design scalable systems, mentor engineering
+              teams, and improve software delivery practices.
+            </p>
+            <p className="text-gray-500 leading-relaxed mb-8">
+              Lowcademy brings this real industry experience directly to
+              developers and teams — so that enterprise architecture thinking is
+              accessible to everyone building serious software.
+            </p>
+            <Button
+              data-ocid="architect.about.button"
+              onClick={() => onNavigate("about")}
+              variant="outline"
+              className="border-[#0B1F3A] text-[#0B1F3A] hover:bg-[#0B1F3A] hover:text-white font-bold px-8 h-12 transition-colors"
+            >
+              About Ankit
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── How You Can Learn ───────────────────────────────────────────────────────
+function HowYouCanLearnSection({
+  onNavigate,
+  onOpenLeadForm,
+}: {
+  onNavigate: (page: Page) => void;
+  onOpenLeadForm: () => void;
+}) {
+  const cards = [
+    {
+      icon: Globe,
+      title: "Free Learning",
+      description:
+        "Explore architecture thinking, OutSystems insights, and enterprise development concepts through free educational content.",
+      button: {
+        label: "Watch on YouTube",
+        action: () => window.open("https://youtube.com/@lowcademy/", "_blank"),
+        ocid: "learn.youtube.button",
+        variant: "outline" as const,
+      },
+    },
+    {
+      icon: BookOpen,
+      title: "Self-Paced Programs",
+      description:
+        "Structured programs designed to help developers build strong foundations in OutSystems and enterprise application development.",
+      button: {
+        label: "Explore Programs",
+        action: () => onNavigate("courses"),
+        ocid: "learn.self_paced.button",
+        variant: "default" as const,
+      },
+    },
+    {
+      icon: Users,
+      title: "Live Architect Cohorts",
+      description:
+        "Small-group deep learning programs focused on architecture thinking, enterprise system design, and real-world delivery practices.",
+      button: {
+        label: "View Next Cohort",
+        action: () => onNavigate("programs"),
+        ocid: "learn.cohort.button",
+        variant: "default" as const,
+      },
+    },
+    {
+      icon: Building2,
+      title: "Corporate Enablement",
+      description:
+        "Capability development programs designed to help organizations strengthen their OutSystems development and architecture practices.",
+      button: {
+        label: "Contact for Corporate Training",
+        action: onOpenLeadForm,
+        ocid: "learn.corporate.button",
+        variant: "outline" as const,
+      },
+    },
+  ];
+
+  return (
+    <section id="learn" className="bg-[#F7F9FC] py-20 lg:py-28">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-14">
+          <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+            Learning Paths
+          </p>
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
+            How You Can Learn at Lowcademy
+          </h2>
+          <p className="text-gray-400 mt-4 max-w-lg mx-auto">
+            Choose your learning path
+          </p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {cards.map((card) => (
+            <div
+              key={card.title}
+              className="bg-white rounded-xl p-7 shadow-card border border-gray-100 flex flex-col card-hover"
+            >
+              <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
+                <card.icon className="text-[#00D1FF]" size={20} />
+              </div>
+              <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-3">
+                {card.title}
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-1">
+                {card.description}
+              </p>
+              <Button
+                data-ocid={card.button.ocid}
+                onClick={card.button.action}
+                variant={card.button.variant}
+                className={
+                  card.button.variant === "default"
+                    ? "w-full bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold h-10 text-sm transition-colors"
+                    : "w-full border-[#0B1F3A]/20 text-[#0B1F3A] hover:bg-[#0B1F3A] hover:text-white font-semibold h-10 text-sm transition-colors"
+                }
+              >
+                {card.button.label}
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Why Lowcademy ───────────────────────────────────────────────────────────
 function WhySection() {
   const cards = [
@@ -610,44 +826,44 @@ function WhySection() {
       icon: Layers,
       title: "Architect-Led Learning",
       description:
-        "Programs designed by a practicing enterprise architect with real delivery experience.",
+        "Learn from someone designing real enterprise systems — not just teaching theory.",
     },
     {
       icon: Globe,
       title: "Enterprise Perspective",
       description:
-        "Understand how real enterprise systems are designed, scaled, and maintained across teams.",
+        "Understand architecture, scalability, and long-term system design as practiced in real organizations.",
     },
     {
       icon: Network,
       title: "Real Project Thinking",
       description:
-        "Learn architecture patterns, scalability principles, and enterprise delivery practices.",
+        "Learn patterns used in real enterprise projects — from DDD to delivery frameworks.",
     },
     {
       icon: TrendingUp,
-      title: "Career Transformation",
+      title: "Delivery Mindset",
       description:
-        "Move from developer mindset to architect mindset. A strategic shift that changes careers.",
+        "Learn how systems are actually built and delivered in organizations — beyond just writing code.",
     },
   ];
 
   return (
-    <section className="bg-[#F7F9FC] py-20 lg:py-28">
+    <section className="bg-white py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
           <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
             The Difference
           </p>
           <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-            Why Learn from Lowcademy
+            Why Developers and Architects Choose Lowcademy
           </h2>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {cards.map((card) => (
             <div
               key={card.title}
-              className="bg-white rounded-xl p-7 shadow-card card-hover border border-gray-100"
+              className="bg-[#F7F9FC] rounded-xl p-7 card-hover border border-gray-100"
             >
               <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
                 <card.icon className="text-[#00D1FF]" size={20} />
@@ -666,138 +882,15 @@ function WhySection() {
   );
 }
 
-// ── Featured Programs ────────────────────────────────────────────────────────
-function ProgramsSection() {
-  const programs = [
-    {
-      title: "OutSystems Fundamentals",
-      level: "Beginner",
-      duration: "8 weeks",
-      price: "₹4,999",
-      description:
-        "Master the foundations of OutSystems development. From UI components and logic to data modeling and deployment.",
-      topics: ["Visual Development", "Data Modeling", "Deployment Basics"],
-      badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
-      featured: false,
-    },
-    {
-      title: "OutSystems Architecture Mastery",
-      level: "Advanced",
-      duration: "12 weeks",
-      price: "₹9,999",
-      description:
-        "Deep-dive into enterprise architecture patterns, domain-driven design, and scalable OutSystems application architecture.",
-      topics: ["Architecture Patterns", "DDD Principles", "Performance Design"],
-      badgeColor: "bg-purple-50 text-purple-700 border-purple-200",
-      featured: true,
-    },
-    {
-      title: "Enterprise Low-Code Development",
-      level: "Intermediate",
-      duration: "10 weeks",
-      price: "₹7,499",
-      description:
-        "Bridge the gap between low-code tools and enterprise delivery. Learn integration patterns, governance, and team collaboration.",
-      topics: ["Integration Patterns", "Governance", "Team Delivery"],
-      badgeColor: "bg-blue-50 text-blue-700 border-blue-200",
-      featured: false,
-    },
-  ];
-
-  return (
-    <section id="programs" className="bg-white py-20 lg:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
-            Flagship Curriculum
-          </p>
-          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-            Featured Learning Programs
-          </h2>
-          <p className="text-gray-400 mt-4 max-w-xl mx-auto">
-            Structured programs designed with enterprise delivery in mind — not
-            just tutorials.
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-6">
-          {programs.map((program, idx) => (
-            <div
-              key={program.title}
-              className={`relative flex flex-col rounded-xl border overflow-hidden card-hover ${
-                program.featured
-                  ? "border-[#00D1FF] shadow-[0_0_40px_rgba(0,209,255,0.12)]"
-                  : "border-gray-100 shadow-card"
-              }`}
-            >
-              {program.featured && (
-                <div className="absolute top-4 right-4">
-                  <Badge className="bg-[#00D1FF] text-[#0B1F3A] font-bold text-xs border-0">
-                    Most Popular
-                  </Badge>
-                </div>
-              )}
-              <div className="h-1 bg-gradient-to-r from-[#00D1FF] to-[#0066cc]" />
-              <div className="flex flex-col flex-1 p-7">
-                <div className="flex items-center gap-3 mb-4">
-                  <Badge
-                    className={`text-xs font-medium border ${program.badgeColor}`}
-                  >
-                    {program.level}
-                  </Badge>
-                  <div className="flex items-center gap-1 text-gray-400 text-xs">
-                    <Clock size={12} />
-                    <span>{program.duration}</span>
-                  </div>
-                </div>
-                <h3 className="font-display font-bold text-[#0B1F3A] text-xl mb-3">
-                  {program.title}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed mb-5">
-                  {program.description}
-                </p>
-                <div className="space-y-2 mb-6">
-                  {program.topics.map((topic) => (
-                    <div key={topic} className="flex items-center gap-2">
-                      <CheckCircle2
-                        size={14}
-                        className="text-[#00D1FF] flex-shrink-0"
-                      />
-                      <span className="text-gray-500 text-xs">{topic}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-auto">
-                  <div className="mb-4">
-                    <div className="text-gray-400 text-xs mb-1">
-                      Program Fee
-                    </div>
-                    <div className="font-display font-black text-[#0B1F3A] text-2xl">
-                      {program.price}
-                    </div>
-                  </div>
-                  <Button
-                    data-ocid={`programs.enroll_button.${idx + 1}`}
-                    className="w-full bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold transition-colors h-11"
-                  >
-                    Enroll Now
-                    <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── Corporate Section (homepage teaser) ─────────────────────────────────────
-function CorporateSection({
+// ── For Organizations ────────────────────────────────────────────────────────
+function ForOrganizationsSection({
   onNavigate,
-}: { onNavigate: (page: Page) => void }) {
-  const offerings = [
+  onOpenLeadForm,
+}: {
+  onNavigate: (page: Page) => void;
+  onOpenLeadForm: () => void;
+}) {
+  const capabilities = [
     { icon: Layers, label: "Architecture Enablement" },
     { icon: BookOpen, label: "Development Best Practices" },
     { icon: BarChart3, label: "Enterprise Application Design" },
@@ -818,21 +911,31 @@ function CorporateSection({
               OutSystems Team
             </h2>
             <p className="text-gray-500 text-lg leading-relaxed mb-8">
-              Lowcademy provides specialized programs for organizations looking
-              to strengthen their OutSystems development teams and enterprise
-              delivery capabilities.
+              Lowcademy provides architect-led programs for organizations
+              looking to strengthen their OutSystems development teams and
+              enterprise delivery capabilities.
             </p>
-            <Button
-              data-ocid="corporate.programs.button"
-              onClick={() => onNavigate("corporate")}
-              className="bg-[#0B1F3A] hover:bg-[#0e2a4a] text-white font-bold px-8 h-12 transition-colors"
-            >
-              Corporate Programs
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <div className="flex flex-wrap gap-3 mb-8">
+              <Button
+                data-ocid="orgs.enquiry.button"
+                onClick={onOpenLeadForm}
+                className="bg-[#0B1F3A] hover:bg-[#0e2a4a] text-white font-bold px-8 h-12 transition-colors"
+              >
+                Corporate Enquiry
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button
+                data-ocid="orgs.corporate_page.button"
+                onClick={() => onNavigate("corporate")}
+                variant="outline"
+                className="border-[#0B1F3A]/20 text-[#0B1F3A] hover:bg-[#0B1F3A] hover:text-white font-semibold px-8 h-12 transition-colors"
+              >
+                Learn More
+              </Button>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {offerings.map((item) => (
+            {capabilities.map((item) => (
               <div
                 key={item.label}
                 className="bg-white rounded-xl p-6 shadow-card border border-gray-100 flex flex-col gap-3 card-hover"
@@ -852,90 +955,6 @@ function CorporateSection({
   );
 }
 
-// ── About Ankit ──────────────────────────────────────────────────────────────
-function AboutSection() {
-  return (
-    <section id="about" className="bg-white py-20 lg:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-14 items-center">
-          <div className="relative">
-            <div
-              className="absolute -inset-4 rounded-2xl opacity-30"
-              style={{
-                background:
-                  "radial-gradient(circle at 50% 50%, rgba(0,209,255,0.15), transparent 70%)",
-              }}
-              aria-hidden="true"
-            />
-            <div className="relative rounded-2xl overflow-hidden border border-gray-100 shadow-card">
-              <img
-                src="/assets/generated/ankit-gangrade-profile.dim_400x400.jpg"
-                alt="Ankit Gangrade — Enterprise Software Architect and Principal Consultant"
-                className="w-full aspect-square object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-4 -right-4 bg-[#0B1F3A] text-white rounded-xl px-5 py-3 shadow-xl">
-              <div className="text-[#00D1FF] font-display font-black text-2xl">
-                10+
-              </div>
-              <div className="text-white/60 text-xs mt-0.5">
-                Years Enterprise
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-4">
-              The Instructor
-            </p>
-            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-2">
-              Ankit Gangrade
-            </h2>
-            <p className="text-gray-400 font-medium mb-6">
-              Enterprise Software Architect · Principal Consultant
-            </p>
-            <p className="text-gray-500 text-lg leading-relaxed mb-4">
-              Ankit Gangrade is an enterprise architect specializing in
-              OutSystems and enterprise delivery enablement. He works with
-              organizations to design scalable systems, mentor engineering
-              teams, and improve software delivery practices.
-            </p>
-            <p className="text-gray-500 leading-relaxed mb-8">
-              Lowcademy was founded to share this real industry experience with
-              developers and organizations — so that enterprise architecture
-              thinking becomes accessible to everyone building serious software.
-            </p>
-            <div className="flex flex-wrap gap-3 mb-8">
-              {[
-                "OutSystems",
-                "Enterprise Architecture",
-                "Low-Code Engineering",
-                "AI-Ready Systems",
-              ].map((tag) => (
-                <Badge
-                  key={tag}
-                  className="bg-[#F7F9FC] text-[#0B1F3A] border border-gray-200 text-xs font-medium px-3 py-1"
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-            <a href="#about">
-              <Button
-                data-ocid="about.ankit.button"
-                variant="outline"
-                className="border-[#0B1F3A] text-[#0B1F3A] hover:bg-[#0B1F3A] hover:text-white font-bold px-8 h-12 transition-colors"
-              >
-                About Ankit
-              </Button>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ── Blog Section ─────────────────────────────────────────────────────────────
 function BlogSection() {
   const posts = [
@@ -946,6 +965,8 @@ function BlogSection() {
         "DDD isn't just for traditional code. Learn how to apply domain boundaries and aggregate patterns when designing OutSystems applications.",
       readTime: "8 min read",
       date: "Mar 2025",
+      image:
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=300&fit=crop&q=80",
     },
     {
       tag: "AI in Software",
@@ -954,6 +975,8 @@ function BlogSection() {
         "AI integration isn't a feature — it's an architectural decision. How to design OutSystems apps that incorporate AI without technical debt.",
       readTime: "12 min read",
       date: "Feb 2025",
+      image:
+        "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=300&fit=crop&q=80",
     },
     {
       tag: "Low-Code Engineering",
@@ -962,11 +985,13 @@ function BlogSection() {
         "From aggregate queries to asynchronous timers — the performance patterns that separate professional OutSystems delivery from amateur builds.",
       readTime: "10 min read",
       date: "Jan 2025",
+      image:
+        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=300&fit=crop&q=80",
     },
   ];
 
   return (
-    <section className="bg-[#F7F9FC] py-20 lg:py-28">
+    <section className="bg-white py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
           <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
@@ -983,6 +1008,14 @@ function BlogSection() {
               data-ocid={`blog.item.${i + 1}`}
               className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-card card-hover"
             >
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3A]/40 to-transparent" />
+              </div>
               <div className="h-1 bg-gradient-to-r from-[#00D1FF] to-[#0066cc]" />
               <div className="p-7">
                 <Badge className="mb-4 bg-[#0B1F3A]/5 text-[#0B1F3A] border-0 text-xs">
@@ -1008,7 +1041,13 @@ function BlogSection() {
 }
 
 // ── Final CTA ────────────────────────────────────────────────────────────────
-function CtaSection() {
+function CtaSection({
+  onNavigate,
+  onOpenLeadForm,
+}: {
+  onNavigate: (page: Page) => void;
+  onOpenLeadForm: () => void;
+}) {
   return (
     <section className="relative bg-[#0B1F3A] py-24 lg:py-32 overflow-hidden">
       <NetworkBackground />
@@ -1030,21 +1069,21 @@ function CtaSection() {
           <span className="text-[#00D1FF]">Enterprise Architecture</span>
         </h2>
         <p className="text-white/50 text-lg max-w-xl mx-auto mb-10">
-          Programs that transform how you think about software. Not just skills
-          — a new professional identity.
+          Programs designed to help developers think beyond coding and
+          understand how real enterprise systems are designed.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="#programs">
-            <Button
-              data-ocid="cta.explore_programs.button"
-              className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 shadow-[0_0_30px_rgba(0,209,255,0.25)] hover:shadow-[0_0_40px_rgba(0,209,255,0.4)] transition-all"
-            >
-              Explore Programs
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </a>
+          <Button
+            data-ocid="cta.explore_programs.button"
+            onClick={() => onNavigate("courses")}
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 shadow-[0_0_30px_rgba(0,209,255,0.25)] hover:shadow-[0_0_40px_rgba(0,209,255,0.4)] transition-all"
+          >
+            Explore Programs
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
           <Button
             data-ocid="cta.join_cohort.button"
+            onClick={onOpenLeadForm}
             variant="outline"
             className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 font-semibold text-base px-8 h-12 bg-transparent transition-all"
           >
@@ -1053,6 +1092,200 @@ function CtaSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+// ── Lead Form Popup ───────────────────────────────────────────────────────────
+function LeadFormDialog({
+  open,
+  onClose,
+}: { open: boolean; onClose: () => void }) {
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
+    experience: "",
+    message: "",
+  });
+
+  function handleClose(val: boolean) {
+    if (!val) {
+      onClose();
+      if (submitted) {
+        setTimeout(() => setSubmitted(false), 300);
+        setTimeout(
+          () =>
+            setFormData({
+              name: "",
+              email: "",
+              phone: "",
+              role: "",
+              experience: "",
+              message: "",
+            }),
+          400,
+        );
+      }
+    }
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitted(true);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent
+        data-ocid="lead_form.dialog"
+        className="max-w-md w-full max-h-[90vh] overflow-y-auto"
+      >
+        <DialogHeader>
+          <DialogTitle className="font-display font-bold text-[#0B1F3A] text-xl">
+            Get in Touch
+          </DialogTitle>
+        </DialogHeader>
+        {submitted ? (
+          <div
+            data-ocid="lead_form.success_state"
+            className="text-center py-10"
+          >
+            <CheckCircle2 className="text-[#00D1FF] mx-auto mb-4" size={48} />
+            <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-2">
+              Thank You!
+            </h3>
+            <p className="text-gray-500 text-sm">
+              We will get in touch shortly.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+            <div>
+              <Label
+                htmlFor="lf-name"
+                className="text-[#0B1F3A] font-medium text-sm"
+              >
+                Name *
+              </Label>
+              <Input
+                id="lf-name"
+                data-ocid="lead_form.input"
+                required
+                placeholder="Your full name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData((p) => ({ ...p, name: e.target.value }))
+                }
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="lf-email"
+                className="text-[#0B1F3A] font-medium text-sm"
+              >
+                Email *
+              </Label>
+              <Input
+                id="lf-email"
+                data-ocid="lead_form.input"
+                type="email"
+                required
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData((p) => ({ ...p, email: e.target.value }))
+                }
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="lf-phone"
+                className="text-[#0B1F3A] font-medium text-sm"
+              >
+                Phone
+              </Label>
+              <Input
+                id="lf-phone"
+                data-ocid="lead_form.input"
+                placeholder="+91 XXXXX XXXXX"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData((p) => ({ ...p, phone: e.target.value }))
+                }
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="lf-role"
+                className="text-[#0B1F3A] font-medium text-sm"
+              >
+                Current Role
+              </Label>
+              <Input
+                id="lf-role"
+                data-ocid="lead_form.input"
+                placeholder="e.g. Software Developer"
+                value={formData.role}
+                onChange={(e) =>
+                  setFormData((p) => ({ ...p, role: e.target.value }))
+                }
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="lf-exp"
+                className="text-[#0B1F3A] font-medium text-sm"
+              >
+                Years of Experience
+              </Label>
+              <Input
+                id="lf-exp"
+                data-ocid="lead_form.input"
+                placeholder="e.g. 3"
+                value={formData.experience}
+                onChange={(e) =>
+                  setFormData((p) => ({ ...p, experience: e.target.value }))
+                }
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="lf-msg"
+                className="text-[#0B1F3A] font-medium text-sm"
+              >
+                Message
+              </Label>
+              <Textarea
+                id="lf-msg"
+                data-ocid="lead_form.textarea"
+                placeholder="Tell us about your learning goals..."
+                value={formData.message}
+                onChange={(e) =>
+                  setFormData((p) => ({ ...p, message: e.target.value }))
+                }
+                className="mt-1"
+                rows={3}
+              />
+            </div>
+            <Button
+              data-ocid="lead_form.submit_button"
+              type="submit"
+              className="w-full bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold h-11"
+            >
+              Submit
+              <Send className="ml-2 h-4 w-4" />
+            </Button>
+          </form>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -1191,157 +1424,10 @@ function Footer({ onNavigate }: { onNavigate: (page: Page) => void }) {
 }
 
 // ── Programs Page ─────────────────────────────────────────────────────────────
-function ProgramsPage({
-  onNavigate: _onNavigate,
-}: { onNavigate: (page: Page) => void }) {
-  const [applyOpen, setApplyOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "",
-    experience: "",
-    message: "",
-  });
-
-  function handleApplySubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSubmitted(true);
-  }
-
-  function handleDialogClose(open: boolean) {
-    setApplyOpen(open);
-    if (!open) setSubmitted(false);
-  }
-
+function ProgramsPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
   return (
     <div className="pt-16">
-      {/* Application Form Dialog */}
-      <Dialog open={applyOpen} onOpenChange={handleDialogClose}>
-        <DialogContent
-          data-ocid="programs.apply_form.dialog"
-          className="max-w-lg"
-        >
-          <DialogHeader>
-            <DialogTitle className="font-display font-bold text-[#0B1F3A] text-xl">
-              Apply for the Next Cohort
-            </DialogTitle>
-          </DialogHeader>
-          {submitted ? (
-            <div
-              data-ocid="programs.apply_form.success_state"
-              className="py-8 text-center"
-            >
-              <div className="w-14 h-14 rounded-full bg-[#00D1FF]/10 border-2 border-[#00D1FF]/40 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 className="text-[#00D1FF]" size={28} />
-              </div>
-              <p className="text-[#0B1F3A] font-semibold text-base leading-relaxed">
-                Thank you for applying. Our team will review your application
-                and get back to you shortly.
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleApplySubmit} className="space-y-4 mt-2">
-              <div>
-                <Label
-                  htmlFor="apply-name"
-                  className="text-[#0B1F3A] font-medium mb-1 block"
-                >
-                  Name
-                </Label>
-                <Input
-                  id="apply-name"
-                  data-ocid="programs.apply_form.input"
-                  required
-                  placeholder="Your full name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, name: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <Label
-                  htmlFor="apply-email"
-                  className="text-[#0B1F3A] font-medium mb-1 block"
-                >
-                  Email
-                </Label>
-                <Input
-                  id="apply-email"
-                  type="email"
-                  required
-                  placeholder="your@email.com"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, email: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <Label
-                  htmlFor="apply-role"
-                  className="text-[#0B1F3A] font-medium mb-1 block"
-                >
-                  Current Role
-                </Label>
-                <Input
-                  id="apply-role"
-                  required
-                  placeholder="e.g. Software Developer"
-                  value={formData.role}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, role: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <Label
-                  htmlFor="apply-exp"
-                  className="text-[#0B1F3A] font-medium mb-1 block"
-                >
-                  Years of Experience
-                </Label>
-                <Input
-                  id="apply-exp"
-                  required
-                  placeholder="e.g. 3"
-                  value={formData.experience}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, experience: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <Label
-                  htmlFor="apply-message"
-                  className="text-[#0B1F3A] font-medium mb-1 block"
-                >
-                  Message
-                </Label>
-                <Textarea
-                  id="apply-message"
-                  placeholder="Tell us about yourself and why you want to join..."
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, message: e.target.value }))
-                  }
-                />
-              </div>
-              <Button
-                type="submit"
-                data-ocid="programs.apply_form.submit_button"
-                className="w-full bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold h-11 rounded-md transition-all"
-              >
-                Submit Application
-              </Button>
-            </form>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Hero */}
+      {/* Section 1 — Hero */}
       <section
         data-ocid="programs.hero.section"
         className="relative bg-[#0B1F3A] py-24 lg:py-32 overflow-hidden"
@@ -1358,364 +1444,164 @@ function ProgramsPage({
             Architect-led programs where software professionals learn how real
             enterprise systems are designed and delivered.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              data-ocid="programs.hero.primary_button"
-              onClick={() => setApplyOpen(true)}
-              className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
-            >
-              Apply for Next Cohort
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button
-              data-ocid="programs.hero.secondary_button"
-              variant="outline"
-              onClick={() => {
-                document
-                  .getElementById("upcoming-cohort")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8 h-12 rounded-md transition-all"
-            >
-              View Program Overview
-            </Button>
+          <Button
+            data-ocid="programs.hero.primary_button"
+            onClick={() => onNavigate("course-details")}
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-10 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)] mb-8"
+          >
+            Apply for the Next Cohort
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          <div className="flex flex-wrap gap-3 justify-center">
+            {[
+              `Next Start: ${COHORT_CONFIG.startDate}`,
+              `Duration: ${COHORT_CONFIG.duration}`,
+              "Mode: Live Online",
+            ].map((item) => (
+              <span
+                key={item}
+                className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 text-white/80 text-sm font-medium border border-white/15"
+              >
+                {item}
+              </span>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Upcoming Cohort */}
+      {/* Section 2 — Upcoming Cohort Program */}
       <section
-        id="upcoming-cohort"
         data-ocid="programs.upcoming.section"
         className="bg-white py-20 lg:py-28"
       >
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Badge className="mb-4 bg-[#00D1FF]/10 text-[#0B1F3A] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
-            Upcoming Cohort
+            Upcoming Cohort Program
           </Badge>
           <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-6">
-            OutSystems Architecture Accelerator
+            {COHORT_CONFIG.programTitle}
           </h2>
-          <p className="text-gray-600 text-base leading-relaxed mb-10">
+          <p className="text-slate-600 text-lg leading-relaxed">
             A live cohort learning experience designed for software
-            professionals to develop enterprise system design thinking and
-            real-world development practices.
+            professionals who want to build enterprise applications using
+            OutSystems, explore the OutSystems Developer Cloud (ODC), and
+            understand how modern AI-assisted applications are built using
+            Agentic AI approaches. This program focuses not only on tools but on
+            developing the thinking required to design and deliver real
+            enterprise systems.
           </p>
-          <div className="grid grid-cols-3 gap-4 mb-10 max-w-2xl mx-auto">
-            {[
-              { label: "Start Date", value: "TBA" },
-              { label: "End Date", value: "TBA" },
-              { label: "Mode", value: "Live Online" },
-            ].map((detail) => (
-              <div
-                key={detail.label}
-                className="bg-[#0B1F3A] rounded-xl p-5 text-center"
-              >
-                <div className="text-[#00D1FF] font-display font-bold text-base">
-                  {detail.value}
-                </div>
-                <div className="text-white/50 text-xs mt-1 tracking-wide">
-                  {detail.label}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              data-ocid="programs.upcoming.apply_button"
-              onClick={() => setApplyOpen(true)}
-              className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold px-8 h-11 rounded-md transition-all"
-            >
-              Apply Now
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button
-              data-ocid="programs.upcoming.curriculum_button"
-              variant="outline"
-              className="border-[#0B1F3A]/20 text-[#0B1F3A] hover:bg-[#0B1F3A]/5 font-semibold px-8 h-11 rounded-md transition-all"
-            >
-              View Curriculum
-            </Button>
-          </div>
         </div>
       </section>
 
-      {/* Who This Is For */}
+      {/* Section 3 — Architect-Led Learning */}
       <section
-        data-ocid="programs.audience.section"
+        data-ocid="programs.architect.section"
         className="bg-[#F7F9FC] py-20 lg:py-28"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Badge className="mb-4 bg-[#00D1FF]/10 text-[#0B1F3A] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
-              Who Should Attend
-            </Badge>
-            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-              Who This Program Is For
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Cpu,
-                title: "Software Developers",
-                desc: "Developers who want to strengthen enterprise software skills.",
-              },
-              {
-                icon: Building2,
-                title: "Engineering Professionals",
-                desc: "Professionals working in real-world development teams.",
-              },
-              {
-                icon: Layers,
-                title: "Experienced Programmers",
-                desc: "Developers who want to understand system design and architecture thinking.",
-              },
-              {
-                icon: Users,
-                title: "Technology Professionals",
-                desc: "Anyone involved in building and delivering software systems.",
-              },
-            ].map((item, i) => (
-              <div
-                key={item.title}
-                data-ocid={`programs.audience.card.${i + 1}`}
-                className="bg-white rounded-xl p-7 shadow-sm border border-gray-100 card-hover"
-              >
-                <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
-                  <item.icon className="text-[#00D1FF]" size={20} />
-                </div>
-                <h3 className="font-display font-bold text-[#0B1F3A] text-base mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  {item.desc}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div>
+              <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight mb-6">
+                Architect-Led Learning
+              </h2>
+              <p className="text-slate-600 text-lg leading-relaxed">
+                This program is designed and delivered by Enterprise Software
+                Architect Ankit Gangrade. With extensive experience designing
+                enterprise systems and leading real-world software delivery,
+                this cohort focuses on how modern applications are actually
+                built in production environments. Instead of focusing only on
+                platform features, the program teaches architectural thinking,
+                system design, and delivery practices used by professional
+                teams.
+              </p>
+            </div>
+            <div className="flex flex-col items-center lg:items-end">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00D1FF]/20 to-[#0B1F3A]/10 blur-xl" />
+                <img
+                  src="https://static.wixstatic.com/media/83c4df_891db97947eb462b8549e5e152249333~mv2.avif/v1/fill/w_372,h_584,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Who-Is-Ankit-Gangrade.avif"
+                  alt="Ankit Gangrade"
+                  className="relative w-64 rounded-2xl shadow-2xl object-cover"
+                />
+              </div>
+              <div className="mt-4 text-center lg:text-right">
+                <p className="font-display font-bold text-[#0B1F3A] text-lg">
+                  Ankit Gangrade
+                </p>
+                <p className="text-slate-500 text-sm">
+                  Enterprise Software Architect · Principal Consultant
                 </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Program Learning Flow Timeline */}
-      <section
-        data-ocid="programs.timeline.section"
-        className="bg-white py-20 lg:py-28"
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Badge className="mb-4 bg-[#00D1FF]/10 text-[#0B1F3A] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
-              Program Structure
-            </Badge>
-            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-              How the Cohort Works
-            </h2>
-          </div>
-          <div className="relative">
-            {/* Vertical connecting line */}
-            <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-[#0B1F3A]/10 hidden sm:block" />
-            <div className="space-y-8">
-              {[
-                {
-                  phase: "Phase 1",
-                  activities: [
-                    "Live Class",
-                    "Pre-recorded Lecture",
-                    "Exercises",
-                    "Quiz",
-                  ],
-                  isFinal: false,
-                },
-                {
-                  phase: "Phase 2",
-                  activities: ["Live Class", "Assignments", "Quiz"],
-                  isFinal: false,
-                },
-                {
-                  phase: "Phase 3",
-                  activities: [
-                    "Live Class",
-                    "Pre-recorded Concept",
-                    "Hands-on Exercises",
-                    "Quiz",
-                  ],
-                  isFinal: false,
-                },
-                {
-                  phase: "Phase 4",
-                  activities: [
-                    "Live Class",
-                    "Project Work",
-                    "Pre-recorded Concepts",
-                    "Doubt Clearing Session",
-                    "Quiz",
-                  ],
-                  isFinal: false,
-                },
-                {
-                  phase: "Final Phase",
-                  activities: ["Final Assessment"],
-                  isFinal: true,
-                },
-              ].map((p) => (
-                <div key={p.phase} className="relative flex gap-6 items-start">
-                  {/* Phase dot */}
-                  <div
-                    className={`relative z-10 flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-xs border-2 ${
-                      p.isFinal
-                        ? "bg-[#00D1FF] border-[#00D1FF] text-[#0B1F3A]"
-                        : "bg-white border-[#00D1FF] text-[#0B1F3A]"
-                    }`}
-                  >
-                    {p.isFinal ? (
-                      <CheckCircle2 size={20} />
-                    ) : (
-                      <span>{p.phase.replace("Phase ", "")}</span>
-                    )}
-                  </div>
-                  {/* Phase content */}
-                  <div
-                    className={`flex-1 rounded-xl p-5 border ${
-                      p.isFinal
-                        ? "bg-[#0B1F3A] border-[#00D1FF]/30"
-                        : "bg-[#F7F9FC] border-gray-100"
-                    }`}
-                  >
-                    <h3
-                      className={`font-display font-bold text-sm mb-3 ${
-                        p.isFinal ? "text-[#00D1FF]" : "text-[#0B1F3A]"
-                      }`}
-                    >
-                      {p.phase}
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {p.activities.map((a) => (
-                        <span
-                          key={a}
-                          className={`text-xs px-3 py-1 rounded-full font-medium ${
-                            p.isFinal
-                              ? "bg-[#00D1FF]/20 text-[#00D1FF]"
-                              : "bg-white text-[#0B1F3A] border border-gray-200"
-                          }`}
-                        >
-                          {a}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* What Makes This Program Different */}
+      {/* Section 4 — Why This Program Exists */}
       <section
-        data-ocid="programs.differentiators.section"
-        className="bg-[#F7F9FC] py-20 lg:py-28"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Badge className="mb-4 bg-[#00D1FF]/10 text-[#0B1F3A] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
-              Why Choose This Program
-            </Badge>
-            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-              What Makes This Program Different
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: GraduationCap,
-                title: "Architect-Led Learning",
-                desc: "Programs are designed and led by a practicing enterprise software architect.",
-              },
-              {
-                icon: Users,
-                title: "Live Cohort Experience",
-                desc: "Interactive learning with real discussions and practical thinking.",
-              },
-              {
-                icon: Globe,
-                title: "Real Industry Context",
-                desc: "Understand how enterprise software systems are designed and delivered.",
-              },
-              {
-                icon: Network,
-                title: "Practical System Thinking",
-                desc: "Focus on architecture thinking, scalability, and real delivery practices.",
-              },
-            ].map((item, i) => (
-              <div
-                key={item.title}
-                data-ocid={`programs.differentiators.card.${i + 1}`}
-                className="bg-white rounded-xl p-7 shadow-sm border border-gray-100 card-hover"
-              >
-                <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
-                  <item.icon className="text-[#00D1FF]" size={20} />
-                </div>
-                <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Additional Learning Support */}
-      <section
-        data-ocid="programs.support.section"
+        data-ocid="programs.why.section"
         className="bg-white py-20 lg:py-28"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Badge className="mb-4 bg-[#00D1FF]/10 text-[#0B1F3A] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
-              Additional Support
-            </Badge>
-            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-              Beyond the Program
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight mb-8">
+            Why This Program Exists
+          </h2>
+          <p className="text-slate-600 text-lg leading-relaxed">
+            Most developers learn platforms and tools. Very few learn how real
+            enterprise systems are designed and delivered. This program bridges
+            that gap by focusing on architectural thinking, real-world
+            constraints, and practical system design decisions used in
+            production environments. Participants learn not only how to build
+            applications, but how to think like engineers responsible for real
+            systems.
+          </p>
+        </div>
+      </section>
+
+      {/* Section 5 — What You Will Walk Away With */}
+      <section
+        data-ocid="programs.outcomes.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight text-center mb-12">
+            What You Will Walk Away With
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-6">
             {[
               {
-                icon: TrendingUp,
-                title: "Career Roadmap Guidance",
-                desc: "Understand long-term career growth paths in software engineering and architecture.",
+                icon: <Code2 size={22} />,
+                title: "Enterprise Application Development",
+                desc: "Build scalable applications using OutSystems and modern development practices.",
               },
               {
-                icon: Briefcase,
-                title: "Interview Preparation",
-                desc: "Guidance on technical interviews and architecture discussions.",
+                icon: <Cloud size={22} />,
+                title: "OutSystems Developer Cloud (ODC)",
+                desc: "Learn how modern cloud-native OutSystems platforms work.",
               },
               {
-                icon: BarChart3,
-                title: "Industry Insights",
-                desc: "Learn how real software teams operate in production environments.",
+                icon: <Cpu size={22} />,
+                title: "AI-Assisted Application Development",
+                desc: "Understand how Agentic AI can be used to build intelligent applications.",
               },
               {
-                icon: Users,
-                title: "Community Interaction",
-                desc: "Interact with other experienced software professionals.",
+                icon: <TrendingUp size={22} />,
+                title: "Career Roadmap in OutSystems Ecosystem",
+                desc: "Understand how to grow from developer to senior engineer and architect roles.",
               },
-            ].map((item, i) => (
+            ].map((item, idx) => (
               <div
                 key={item.title}
-                data-ocid={`programs.support.card.${i + 1}`}
-                className="bg-[#F7F9FC] rounded-xl p-7 border border-gray-100 card-hover"
+                data-ocid={`programs.outcomes.card.${idx + 1}`}
+                className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="w-11 h-11 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center mb-5">
-                  <item.icon className="text-[#00D1FF]" size={20} />
+                <div className="w-10 h-10 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center text-[#0B1F3A] mb-4">
+                  {item.icon}
                 </div>
                 <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
+                <p className="text-slate-600 text-sm leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -1724,22 +1610,273 @@ function ProgramsPage({
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* Section 6 — Who This Program Is For */}
+      <section
+        data-ocid="programs.who.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight text-center mb-12">
+            Who This Program Is For
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: <Code2 size={20} />,
+                title: "Software Developers",
+                desc: "Developers who want to transition into enterprise-grade development.",
+              },
+              {
+                icon: <Users size={20} />,
+                title: "Engineering Professionals",
+                desc: "Professionals working in real-world delivery teams.",
+              },
+              {
+                icon: <Layers size={20} />,
+                title: "Experienced Programmers",
+                desc: "Developers who want to strengthen system design thinking.",
+              },
+              {
+                icon: <Building2 size={20} />,
+                title: "Technology Professionals",
+                desc: "Anyone involved in designing, building, or delivering software systems.",
+              },
+            ].map((item, idx) => (
+              <div
+                key={item.title}
+                data-ocid={`programs.who.card.${idx + 1}`}
+                className="bg-[#F7F9FC] rounded-xl p-6 border border-slate-100 text-center hover:shadow-md transition-shadow"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#00D1FF]/10 flex items-center justify-center text-[#0B1F3A] mx-auto mb-3">
+                  {item.icon}
+                </div>
+                <h3 className="font-display font-bold text-[#0B1F3A] text-base mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-slate-500 text-sm leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 7 — How the Cohort Learning Cycle Works */}
+      <section
+        data-ocid="programs.cycle.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight text-center mb-4">
+            How the Cohort Learning Cycle Works
+          </h2>
+          <p className="text-slate-500 text-center text-sm mb-12">
+            This cycle continues throughout the cohort.
+          </p>
+          <div className="space-y-4">
+            {[
+              {
+                step: "Step 1",
+                title: "Live Architectural Session",
+                desc: "Concepts explained through real-world examples.",
+                highlight: false,
+              },
+              {
+                step: "Step 2",
+                title: "Guided Implementation",
+                desc: "Participants implement concepts through practical exercises.",
+                highlight: false,
+              },
+              {
+                step: "Step 3",
+                title: "Assignments & Practice",
+                desc: "Hands-on development tasks to strengthen understanding.",
+                highlight: false,
+              },
+              {
+                step: "Step 4",
+                title: "Review & Next Session",
+                desc: "Discussion, feedback, and deeper architectural insights.",
+                highlight: false,
+              },
+              {
+                step: "Final",
+                title: "Final Assessment and Program Review",
+                desc: "Comprehensive evaluation and program completion.",
+                highlight: true,
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className={`flex items-start gap-5 p-5 rounded-xl border ${
+                  item.highlight
+                    ? "bg-[#0B1F3A] border-[#00D1FF]/30 text-white"
+                    : "bg-white border-slate-100 shadow-sm"
+                }`}
+              >
+                <div
+                  className={`min-w-[60px] text-center font-display font-black text-sm uppercase tracking-widest pt-0.5 ${item.highlight ? "text-[#00D1FF]" : "text-[#00D1FF]"}`}
+                >
+                  {item.step}
+                </div>
+                <div>
+                  <h3
+                    className={`font-display font-bold text-lg mb-1 ${item.highlight ? "text-white" : "text-[#0B1F3A]"}`}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    className={`text-sm leading-relaxed ${item.highlight ? "text-white/70" : "text-slate-500"}`}
+                  >
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 8 — What Makes This Program Different */}
+      <section
+        data-ocid="programs.different.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight text-center mb-12">
+            What Makes This Program Different
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: <Star size={20} />,
+                title: "Architect-Led Learning",
+                desc: "Programs designed and led by a practicing enterprise architect.",
+              },
+              {
+                icon: <Users size={20} />,
+                title: "Live Cohort Interaction",
+                desc: "Real-time discussions, feedback, and collaborative learning.",
+              },
+              {
+                icon: <Building2 size={20} />,
+                title: "Real Industry Context",
+                desc: "Learn from systems built and delivered in real organizations.",
+              },
+              {
+                icon: <Layers size={20} />,
+                title: "Practical System Thinking",
+                desc: "Focus on architecture, scalability, and delivery thinking.",
+              },
+            ].map((item, idx) => (
+              <div
+                key={item.title}
+                data-ocid={`programs.different.card.${idx + 1}`}
+                className="bg-[#F7F9FC] rounded-xl p-6 border border-slate-100 hover:shadow-md transition-shadow"
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#00D1FF]/10 flex items-center justify-center text-[#0B1F3A] mb-4">
+                  {item.icon}
+                </div>
+                <h3 className="font-display font-bold text-[#0B1F3A] text-base mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-slate-500 text-sm leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 9 — Beyond the Program */}
+      <section
+        data-ocid="programs.beyond.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight text-center mb-12">
+            Beyond the Program
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: <TrendingUp size={20} />,
+                title: "Career Roadmap Guidance",
+                desc: "Understand pathways from developer to architect roles.",
+              },
+              {
+                icon: <Briefcase size={20} />,
+                title: "Interview Preparation",
+                desc: "Prepare for enterprise software and architecture interviews.",
+              },
+              {
+                icon: <Lightbulb size={20} />,
+                title: "Industry Insights",
+                desc: "Access real-world patterns from enterprise software delivery.",
+              },
+              {
+                icon: <Users size={20} />,
+                title: "Community Interaction",
+                desc: "Connect with professionals on the same learning journey.",
+              },
+            ].map((item, idx) => (
+              <div
+                key={item.title}
+                data-ocid={`programs.beyond.card.${idx + 1}`}
+                className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow text-center"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#00D1FF]/10 flex items-center justify-center text-[#0B1F3A] mx-auto mb-3">
+                  {item.icon}
+                </div>
+                <h3 className="font-display font-bold text-[#0B1F3A] text-base mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-slate-500 text-sm leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 10 — Limited Cohort Size */}
+      <section
+        data-ocid="programs.limited.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl tracking-tight mb-8">
+            Limited Cohort Size
+          </h2>
+          <div className="bg-[#0B1F3A]/5 border border-[#00D1FF]/20 rounded-2xl p-8">
+            <p className="text-slate-700 text-lg leading-relaxed">
+              Each cohort is intentionally limited to a small group of
+              participants to ensure meaningful discussions, direct feedback,
+              and deeper architectural learning.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 11 — Final CTA */}
       <section
         data-ocid="programs.cta.section"
-        className="relative bg-[#0B1F3A] py-20 lg:py-28 overflow-hidden"
+        className="relative bg-[#0B1F3A] py-24 lg:py-32 overflow-hidden"
       >
         <NetworkBackground />
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-display font-black text-white text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-4">
             Apply for the Next Cohort
           </h2>
-          <p className="text-white/60 text-lg leading-relaxed mb-10">
+          <p className="text-white/60 text-lg mb-10">
             Limited seats to ensure interactive learning.
           </p>
           <Button
             data-ocid="programs.cta.primary_button"
-            onClick={() => setApplyOpen(true)}
+            onClick={() => onNavigate("course-details")}
             className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-10 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
           >
             Apply Now
@@ -1750,6 +1887,39 @@ function ProgramsPage({
     </div>
   );
 }
+
+// ── Course Details Page ──────────────────────────────────────────────────────
+function CourseDetailsPage({
+  onNavigate,
+}: { onNavigate: (page: Page) => void }) {
+  return (
+    <div className="pt-16">
+      <section className="relative bg-[#0B1F3A] py-24 lg:py-32 overflow-hidden">
+        <NetworkBackground />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Badge className="mb-6 bg-[#00D1FF]/10 text-[#00D1FF] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
+            Course Details
+          </Badge>
+          <h1 className="font-display font-black text-white text-4xl sm:text-5xl lg:text-6xl tracking-tight mb-6">
+            OutSystems + ODC + Agentic AI Career Accelerator
+          </h1>
+          <p className="text-white/60 text-lg sm:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
+            Full course details coming soon. This page is being designed.
+          </p>
+          <Button
+            data-ocid="course-details.back.button"
+            onClick={() => onNavigate("programs")}
+            variant="outline"
+            className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 h-12 rounded-md"
+          >
+            Back to Programs
+          </Button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 // ── Contact Page ─────────────────────────────────────────────────────────────
 function CohortDetailsPage({
   onNavigate,
@@ -1774,233 +1944,293 @@ function CohortDetailsPage({
     if (!open) setSubmitted(false);
   }
 
-  const weeks = [
+  // Cohort meta
+  const cohortMeta = {
+    title: "OutSystems Architecture Accelerator",
+    subtitle:
+      "A structured 4-week live cohort with day-by-day learning progression designed to build real enterprise architecture thinking.",
+    startingFrom: "March 15, 2026",
+    endingOn: "April 11, 2026",
+    totalSessions: "20 Days",
+  };
+
+  const allDays = [
     {
-      label: "Week 1 — Foundations",
-      days: [
-        {
-          day: 1,
-          title: "Kickoff & Foundations",
-          activities: [
-            "Live Session: Welcome & Program Overview",
-            "Pre-recorded: Introduction to Enterprise Architecture",
-            "Exercise: Architecture thinking warm-up",
-          ],
-          outcome: "Understand the program structure and enterprise mindset",
-        },
-        {
-          day: 2,
-          title: "OutSystems Platform Deep Dive",
-          activities: [
-            "Live Session: OutSystems Architecture Overview",
-            "Pre-recorded: Platform Capabilities & Limitations",
-            "Hands-on: Build a basic OutSystems module",
-            "Quiz: Platform fundamentals check",
-          ],
-          outcome: "Navigate and understand OutSystems confidently",
-        },
-        {
-          day: 3,
-          title: "System Design Thinking",
-          activities: [
-            "Live Session: How Real Systems Are Designed",
-            "Pre-recorded: System Design Patterns in Low-Code",
-            "Exercise: Design a simple enterprise module",
-            "Quiz: System design concepts",
-          ],
-          outcome: "Apply design thinking to real problems",
-        },
-        {
-          day: 4,
-          title: "Application Scalability",
-          activities: [
-            "Live Session: Designing for Scale",
-            "Pre-recorded: Scalability in OutSystems Applications",
-            "Hands-on: Refactor a module for scalability",
-            "Assignment: Document a scalability decision",
-          ],
-          outcome: "Design scalable application architectures",
-        },
-        {
-          day: 5,
-          title: "Delivery Frameworks",
-          activities: [
-            "Live Session: How Enterprise Teams Deliver Software",
-            "Pre-recorded: Agile + Low-Code Delivery",
-            "Exercise: Map a delivery workflow",
-            "Quiz: Delivery concepts",
-          ],
-          outcome: "Understand delivery in enterprise context",
-        },
+      day: 1,
+      title: "Kickoff & Foundations",
+      activities: [
+        "Live Session: Welcome & Program Overview",
+        "Pre-recorded: Introduction to Enterprise Architecture",
+        "Exercise: Architecture thinking warm-up",
       ],
+      outcome: "Understand the program structure and enterprise mindset",
     },
     {
-      label: "Week 2 — Architecture Patterns",
-      days: [
-        {
-          day: 6,
-          title: "Team Collaboration Patterns",
-          activities: [
-            "Live Session: Working in Enterprise Teams",
-            "Pre-recorded: Cross-team Architecture Coordination",
-            "Exercise: Collaboration scenario analysis",
-          ],
-          outcome: "Navigate team dynamics in large projects",
-        },
-        {
-          day: 7,
-          title: "Integration Patterns",
-          activities: [
-            "Live Session: Enterprise Integration Architecture",
-            "Pre-recorded: APIs, Services, and Data Flows",
-            "Hands-on: Build an integration in OutSystems",
-            "Quiz: Integration patterns",
-          ],
-          outcome: "Design integration-ready architectures",
-        },
-        {
-          day: 8,
-          title: "Real Project Case Study (Part 1)",
-          activities: [
-            "Live Session: Analyzing a Real Enterprise Project",
-            "Pre-recorded: Case Study Walkthrough",
-            "Exercise: Identify architecture decisions in the case",
-          ],
-          outcome: "Apply learnings to real-world context",
-        },
-        {
-          day: 9,
-          title: "Real Project Case Study (Part 2)",
-          activities: [
-            "Live Session: Architecture Decisions Deep Dive",
-            "Exercise: Redesign a component of the case study",
-            "Doubt Clearing Session",
-          ],
-          outcome: "Develop architecture judgment",
-        },
-        {
-          day: 10,
-          title: "Mid-Program Review",
-          activities: [
-            "Live Session: Progress Check & Open Discussion",
-            "Quiz: Week 2 Knowledge Review",
-            "Q&A with Instructor",
-          ],
-          outcome: "Consolidate learning from the first half",
-        },
+      day: 2,
+      title: "OutSystems Platform Deep Dive",
+      activities: [
+        "Live Session: OutSystems Architecture Overview",
+        "Pre-recorded: Platform Capabilities & Limitations",
+        "Hands-on: Build a basic OutSystems module",
+        "Quiz: Platform fundamentals check",
       ],
+      outcome: "Navigate and understand OutSystems confidently",
     },
     {
-      label: "Week 3 — Advanced Concepts",
-      days: [
-        {
-          day: 11,
-          title: "Advanced Architecture Patterns",
-          activities: [
-            "Live Session: Complex System Design in Low-Code",
-            "Pre-recorded: Advanced Patterns & Anti-patterns",
-            "Hands-on: Implement an advanced pattern",
-          ],
-          outcome: "Handle complex architecture scenarios",
-        },
-        {
-          day: 12,
-          title: "Performance & Optimization",
-          activities: [
-            "Live Session: Application Performance in OutSystems",
-            "Pre-recorded: Query Optimization & Caching",
-            "Exercise: Performance analysis exercise",
-            "Quiz: Performance concepts",
-          ],
-          outcome: "Build performant applications",
-        },
-        {
-          day: 13,
-          title: "Security & Governance",
-          activities: [
-            "Live Session: Enterprise Security Architecture",
-            "Pre-recorded: Governance Models for Low-Code",
-            "Exercise: Security review checklist",
-          ],
-          outcome: "Apply security thinking to designs",
-        },
-        {
-          day: 14,
-          title: "Architecture Documentation",
-          activities: [
-            "Live Session: Documenting Enterprise Systems",
-            "Pre-recorded: Architecture Decision Records (ADRs)",
-            "Exercise: Write an ADR for a design decision",
-          ],
-          outcome: "Communicate architecture effectively",
-        },
-        {
-          day: 15,
-          title: "Stakeholder Communication",
-          activities: [
-            "Live Session: Presenting Architecture to Business",
-            "Pre-recorded: Non-technical Communication for Architects",
-            "Exercise: Prepare a mini architecture presentation",
-          ],
-          outcome: "Bridge technical and business conversations",
-        },
+      day: 3,
+      title: "System Design Thinking",
+      activities: [
+        "Live Session: How Real Systems Are Designed",
+        "Pre-recorded: System Design Patterns in Low-Code",
+        "Exercise: Design a simple enterprise module",
+        "Quiz: System design concepts",
       ],
+      outcome: "Apply design thinking to real problems",
     },
     {
-      label: "Week 4 — Capstone & Assessment",
-      days: [
-        {
-          day: 16,
-          title: "Capstone Project Kickoff",
-          activities: [
-            "Live Session: Project Brief & Requirements",
-            "Pre-recorded: How to Structure Your Project",
-            "Exercise: Define project scope and architecture",
-          ],
-          outcome: "Start building your capstone project",
-        },
-        {
-          day: 17,
-          title: "Capstone Project Work",
-          activities: [
-            "Project Work Session (self-paced)",
-            "Doubt Clearing: Office Hours with Instructor",
-          ],
-          outcome: "Build the core of your capstone project",
-        },
-        {
-          day: 18,
-          title: "Capstone Project Completion",
-          activities: [
-            "Project Work Session (self-paced)",
-            "Peer Review: Share with cohort members",
-          ],
-          outcome: "Complete and refine the capstone project",
-        },
-        {
-          day: 19,
-          title: "Final Review & Preparation",
-          activities: [
-            "Live Session: Program Summary & Key Takeaways",
-            "Revision: Review key concepts from all modules",
-            "Q&A Session: Final Doubt Clearing",
-          ],
-          outcome: "Prepare for the final assessment",
-        },
-        {
-          day: 20,
-          title: "Final Assessment",
-          activities: [
-            "Final Assessment (timed)",
-            "Architecture Design Challenge",
-            "Program Completion & Certificate",
-          ],
-          outcome: "Demonstrate full program mastery",
-          isFinal: true,
-        },
+      day: 4,
+      title: "Application Scalability",
+      activities: [
+        "Live Session: Designing for Scale",
+        "Pre-recorded: Scalability in OutSystems Applications",
+        "Hands-on: Refactor a module for scalability",
+        "Assignment: Document a scalability decision",
       ],
+      outcome: "Design scalable application architectures",
+    },
+    {
+      day: 5,
+      title: "Delivery Frameworks",
+      activities: [
+        "Live Session: How Enterprise Teams Deliver Software",
+        "Pre-recorded: Agile + Low-Code Delivery",
+        "Exercise: Map a delivery workflow",
+        "Quiz: Delivery concepts",
+      ],
+      outcome: "Understand delivery in enterprise context",
+    },
+    {
+      day: 6,
+      title: "Team Collaboration Patterns",
+      activities: [
+        "Live Session: Working in Enterprise Teams",
+        "Pre-recorded: Cross-team Architecture Coordination",
+        "Exercise: Collaboration scenario analysis",
+      ],
+      outcome: "Navigate team dynamics in large projects",
+    },
+    {
+      day: 7,
+      title: "Integration Patterns",
+      activities: [
+        "Live Session: Enterprise Integration Architecture",
+        "Pre-recorded: APIs, Services, and Data Flows",
+        "Hands-on: Build an integration in OutSystems",
+        "Quiz: Integration patterns",
+      ],
+      outcome: "Design integration-ready architectures",
+    },
+    {
+      day: 8,
+      title: "Real Project Case Study (Part 1)",
+      activities: [
+        "Live Session: Analyzing a Real Enterprise Project",
+        "Pre-recorded: Case Study Walkthrough",
+        "Exercise: Identify architecture decisions in the case",
+      ],
+      outcome: "Apply learnings to real-world context",
+    },
+    {
+      day: 9,
+      title: "Real Project Case Study (Part 2)",
+      activities: [
+        "Live Session: Architecture Decisions Deep Dive",
+        "Exercise: Redesign a component of the case study",
+        "Doubt Clearing Session",
+      ],
+      outcome: "Develop architecture judgment",
+    },
+    {
+      day: 10,
+      title: "Mid-Program Review",
+      activities: [
+        "Live Session: Progress Check & Open Discussion",
+        "Quiz: Week 2 Knowledge Review",
+        "Q&A with Instructor",
+      ],
+      outcome: "Consolidate learning from the first half",
+    },
+    {
+      day: 11,
+      title: "Advanced Architecture Patterns",
+      activities: [
+        "Live Session: Complex System Design in Low-Code",
+        "Pre-recorded: Advanced Patterns & Anti-patterns",
+        "Hands-on: Implement an advanced pattern",
+      ],
+      outcome: "Handle complex architecture scenarios",
+    },
+    {
+      day: 12,
+      title: "Performance & Optimization",
+      activities: [
+        "Live Session: Application Performance in OutSystems",
+        "Pre-recorded: Query Optimization & Caching",
+        "Exercise: Performance analysis exercise",
+        "Quiz: Performance concepts",
+      ],
+      outcome: "Build performant applications",
+    },
+    {
+      day: 13,
+      title: "Security & Governance",
+      activities: [
+        "Live Session: Enterprise Security Architecture",
+        "Pre-recorded: Governance Models for Low-Code",
+        "Exercise: Security review checklist",
+      ],
+      outcome: "Apply security thinking to designs",
+    },
+    {
+      day: 14,
+      title: "Architecture Documentation",
+      activities: [
+        "Live Session: Documenting Enterprise Systems",
+        "Pre-recorded: Architecture Decision Records (ADRs)",
+        "Exercise: Write an ADR for a design decision",
+      ],
+      outcome: "Communicate architecture effectively",
+    },
+    {
+      day: 15,
+      title: "Stakeholder Communication",
+      activities: [
+        "Live Session: Presenting Architecture to Business",
+        "Pre-recorded: Non-technical Communication for Architects",
+        "Exercise: Prepare a mini architecture presentation",
+      ],
+      outcome: "Bridge technical and business conversations",
+    },
+    {
+      day: 16,
+      title: "Capstone Project Kickoff",
+      activities: [
+        "Live Session: Project Brief & Requirements",
+        "Pre-recorded: How to Structure Your Project",
+        "Exercise: Define project scope and architecture",
+      ],
+      outcome: "Start building your capstone project",
+    },
+    {
+      day: 17,
+      title: "Capstone Project Work",
+      activities: [
+        "Project Work Session (self-paced)",
+        "Doubt Clearing: Office Hours with Instructor",
+      ],
+      outcome: "Build the core of your capstone project",
+    },
+    {
+      day: 18,
+      title: "Capstone Project Completion",
+      activities: [
+        "Project Work Session (self-paced)",
+        "Peer Review: Share with cohort members",
+      ],
+      outcome: "Complete and refine the capstone project",
+    },
+    {
+      day: 19,
+      title: "Final Review & Preparation",
+      activities: [
+        "Live Session: Program Summary & Key Takeaways",
+        "Revision: Review key concepts from all modules",
+        "Q&A Session: Final Doubt Clearing",
+      ],
+      outcome: "Prepare for the final assessment",
+    },
+    {
+      day: 20,
+      title: "Final Assessment",
+      activities: [
+        "Final Assessment (timed)",
+        "Architecture Design Challenge",
+        "Program Completion & Certificate",
+      ],
+      outcome: "Demonstrate full program mastery",
+      isFinal: true,
     },
   ];
+
+  // Start date: March 15, 2026
+  const startDate = new Date(2026, 2, 15);
+
+  function getDayDate(dayNum: number): string {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + dayNum - 1);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  }
+
+  function extractTopics(activities: string[]): string {
+    return activities
+      .map((a) => {
+        const colonIdx = a.indexOf(":");
+        if (colonIdx !== -1) return a.slice(colonIdx + 1).trim();
+        return a.trim();
+      })
+      .join(", ");
+  }
+
+  function getActivityTags(
+    activities: string[],
+  ): { label: string; icon: string }[] {
+    const tags: { label: string; icon: string }[] = [];
+    const lower = activities.map((a) => a.toLowerCase());
+    if (lower.some((a) => a.startsWith("live session")))
+      tags.push({ label: "Live Session", icon: "🎙️" });
+    if (lower.some((a) => a.startsWith("pre-recorded")))
+      tags.push({ label: "Pre-Recorded", icon: "📹" });
+    if (
+      lower.some(
+        (a) =>
+          a.startsWith("hands-on") ||
+          a.startsWith("exercise") ||
+          a.startsWith("project work"),
+      )
+    )
+      tags.push({ label: "Hands-on Exercise", icon: "🛠️" });
+    if (lower.some((a) => a.startsWith("quiz")))
+      tags.push({ label: "Quiz", icon: "❓" });
+    if (lower.some((a) => a.startsWith("assignment")))
+      tags.push({ label: "Assignment", icon: "📝" });
+    return tags.slice(0, 3);
+  }
+
+  // Inter-day content between day N and day N+1 — always show typical fillers
+  function getInterDayItems(
+    dayIndex: number,
+  ): { label: string; icon: string }[] {
+    const patterns = [
+      [
+        { label: "Pre-Recorded session available", icon: "📹" },
+        { label: "Quiz to attempt", icon: "❓" },
+      ],
+      [
+        { label: "Assignments to complete", icon: "📝" },
+        { label: "Pre-Recorded session available", icon: "📹" },
+      ],
+      [
+        { label: "Exercises to practice", icon: "🛠️" },
+        { label: "Quiz to attempt", icon: "❓" },
+      ],
+      [
+        { label: "Pre-Recorded session available", icon: "📹" },
+        { label: "Assignments to complete", icon: "📝" },
+        { label: "Quiz to attempt", icon: "❓" },
+      ],
+    ];
+    return patterns[dayIndex % patterns.length];
+  }
 
   return (
     <div className="pt-16">
@@ -2148,26 +2378,39 @@ function CohortDetailsPage({
           <Badge className="mb-6 bg-[#00D1FF]/10 text-[#00D1FF] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
             Cohort Curriculum
           </Badge>
-          <h1 className="font-display font-black text-white text-4xl sm:text-5xl lg:text-6xl tracking-tight mb-6">
-            OutSystems Architecture Accelerator
+          <h1 className="font-display font-black text-white text-4xl sm:text-5xl lg:text-6xl tracking-tight mb-4">
+            {cohortMeta.title}
           </h1>
           <p className="text-white/60 text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl">
-            A structured 4-week live cohort with day-by-day learning progression
-            designed to build real enterprise architecture thinking.
+            {cohortMeta.subtitle}
           </p>
-          <div className="flex flex-wrap gap-3">
+          {/* Stat pills */}
+          <div className="flex flex-wrap gap-3 mb-8">
             <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white text-sm font-medium">
-              <Clock size={14} />4 Weeks · 20 Days
+              <Calendar size={14} />
+              Starting From: {cohortMeta.startingFrom}
             </span>
             <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white text-sm font-medium">
-              <Globe size={14} />
-              Live Online
+              <Calendar size={14} />
+              Ending On: {cohortMeta.endingOn}
+            </span>
+            <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white text-sm font-medium">
+              <Clock size={14} />
+              Total Sessions: {cohortMeta.totalSessions}
             </span>
           </div>
+          <Button
+            data-ocid="cohort.hero.primary_button"
+            onClick={() => setApplyOpen(true)}
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
+          >
+            Apply Now
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </section>
 
-      {/* Curriculum */}
+      {/* Day-by-Day Curriculum */}
       <section
         data-ocid="cohort.curriculum.section"
         className="bg-white py-20 lg:py-28"
@@ -2180,85 +2423,134 @@ function CohortDetailsPage({
             <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-4">
               Day-by-Day Curriculum
             </h2>
-            <p className="text-gray-600 text-base leading-relaxed max-w-2xl mx-auto">
+            <p className="text-gray-500 text-base leading-relaxed max-w-2xl mx-auto">
               Every day is structured for maximum learning — live sessions,
               self-paced content, exercises, and reflection.
             </p>
           </div>
-          <div className="space-y-12">
-            {weeks.map((week) => (
-              <div key={week.label}>
-                {/* Week divider */}
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="flex-1 h-px bg-[#00D1FF]/20" />
-                  <span className="text-xs font-bold tracking-wider uppercase text-[#00D1FF] bg-[#00D1FF]/10 border border-[#00D1FF]/20 rounded-full px-4 py-1.5">
-                    {week.label}
-                  </span>
-                  <div className="flex-1 h-px bg-[#00D1FF]/20" />
-                </div>
-                <div className="relative">
-                  {/* Vertical line */}
-                  <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-[#0B1F3A]/10 hidden sm:block" />
-                  <div className="space-y-6">
-                    {week.days.map((d) => (
+
+          {/* Flat timeline */}
+          <div className="relative">
+            {/* Vertical connector line */}
+            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#00D1FF]/30 via-[#0B1F3A]/10 to-[#00D1FF]/30 hidden sm:block" />
+
+            <div className="space-y-0">
+              {allDays.map((d, idx) => {
+                const tags = getActivityTags(d.activities);
+                const topics = extractTopics(d.activities);
+                const dayDate = getDayDate(d.day);
+                const isLast = idx === allDays.length - 1;
+                const interItems = !isLast ? getInterDayItems(idx) : [];
+
+                return (
+                  <div key={d.day}>
+                    {/* Day row */}
+                    <div
+                      data-ocid={`cohort.curriculum.item.${d.day}`}
+                      className="relative flex gap-5 sm:gap-6 items-start"
+                    >
+                      {/* Day circle */}
                       <div
-                        key={d.day}
-                        data-ocid={`cohort.curriculum.item.${d.day}`}
-                        className="relative flex gap-6 items-start"
+                        className={`relative z-10 flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm border-2 ${d.isFinal ? "bg-[#00D1FF] border-[#00D1FF] text-[#0B1F3A]" : "bg-white border-[#00D1FF] text-[#0B1F3A]"}`}
                       >
-                        {/* Day circle */}
-                        <div
-                          className={`relative z-10 flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm border-2 ${
-                            d.isFinal
-                              ? "bg-[#00D1FF] border-[#00D1FF] text-[#0B1F3A]"
-                              : "bg-white border-[#00D1FF] text-[#0B1F3A]"
-                          }`}
-                        >
-                          {d.isFinal ? (
-                            <CheckCircle2 size={20} />
-                          ) : (
-                            <span>{d.day}</span>
-                          )}
-                        </div>
-                        {/* Day card */}
-                        <div
-                          className={`flex-1 rounded-xl p-5 border ${
-                            d.isFinal
-                              ? "bg-[#0B1F3A] border-[#00D1FF]/30"
-                              : "bg-[#F7F9FC] border-gray-100"
-                          }`}
-                        >
+                        {d.isFinal ? (
+                          <CheckCircle2 size={20} />
+                        ) : (
+                          <span>{d.day}</span>
+                        )}
+                      </div>
+
+                      {/* Day card */}
+                      <div
+                        className={`flex-1 rounded-xl border mb-0 ${d.isFinal ? "bg-[#0B1F3A] border-[#00D1FF]/40" : "bg-[#F7F9FC] border-gray-200"} p-5 shadow-sm`}
+                      >
+                        {/* Header row: title + date */}
+                        <div className="flex items-start justify-between gap-3 mb-3">
                           <h3
-                            className={`font-display font-bold text-base mb-3 ${d.isFinal ? "text-[#00D1FF]" : "text-[#0B1F3A]"}`}
+                            className={`font-display font-bold text-base leading-snug ${d.isFinal ? "text-[#00D1FF]" : "text-[#0B1F3A]"}`}
                           >
                             Day {d.day} — {d.title}
                           </h3>
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {d.activities.map((a) => (
-                              <span
-                                key={a}
-                                className={`text-xs px-3 py-1 rounded-full font-medium ${
-                                  d.isFinal
-                                    ? "bg-[#00D1FF]/20 text-[#00D1FF]"
-                                    : "bg-white text-[#0B1F3A] border border-gray-200"
-                                }`}
-                              >
-                                {a}
-                              </span>
-                            ))}
-                          </div>
-                          <p
-                            className={`text-xs font-semibold ${d.isFinal ? "text-[#00D1FF]/80" : "text-[#00D1FF]"}`}
+                          <span
+                            className={`text-xs font-semibold whitespace-nowrap mt-0.5 px-2 py-0.5 rounded-full border ${d.isFinal ? "text-[#00D1FF]/80 border-[#00D1FF]/30 bg-[#00D1FF]/10" : "text-[#00D1FF] border-[#00D1FF]/30 bg-[#00D1FF]/5"}`}
                           >
-                            ✦ Outcome: {d.outcome}
-                          </p>
+                            {dayDate}
+                          </span>
+                        </div>
+
+                        {/* Learning */}
+                        <p
+                          className={`text-sm mb-2 ${d.isFinal ? "text-white/70" : "text-gray-700"}`}
+                        >
+                          <span
+                            className={`font-semibold ${d.isFinal ? "text-white" : "text-[#0B1F3A]"}`}
+                          >
+                            Learning:{" "}
+                          </span>
+                          {topics}
+                        </p>
+
+                        {/* Outcome */}
+                        <p
+                          className={`text-sm mb-3 ${d.isFinal ? "text-[#00D1FF]/80" : "text-[#0B1F3A]/70"}`}
+                        >
+                          <span
+                            className={`font-semibold ${d.isFinal ? "text-[#00D1FF]" : "text-[#0B1F3A]"}`}
+                          >
+                            Outcome:{" "}
+                          </span>
+                          {d.outcome}
+                        </p>
+
+                        {/* Activity type tags — faded indicators */}
+                        <div className="flex flex-wrap gap-2 pt-1 border-t border-gray-100/50">
+                          {tags.map((tag) => (
+                            <span
+                              key={tag.label}
+                              className={`inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full font-medium opacity-70 ${d.isFinal ? "bg-white/10 text-white/70 border border-white/20" : "bg-gray-100 text-gray-500 border border-gray-200"}`}
+                            >
+                              {tag.icon} {tag.label}
+                            </span>
+                          ))}
                         </div>
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Inter-day connector */}
+                    {!isLast && interItems.length > 0 && (
+                      <div className="relative flex gap-5 sm:gap-6 items-center py-3 pl-0">
+                        {/* Spacer to align with cards */}
+                        <div className="flex-shrink-0 w-12 flex justify-center">
+                          <div className="w-1.5 h-full min-h-[2px] bg-transparent" />
+                        </div>
+                        <div className="flex-1 flex flex-wrap gap-2 opacity-60">
+                          {interItems.map((item) => (
+                            <span
+                              key={item.label}
+                              className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border border-dashed border-gray-300 bg-gray-50 text-gray-500 font-medium"
+                            >
+                              {item.icon} {item.label}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              </div>
-            ))}
+                );
+              })}
+            </div>
+
+            {/* Enroll Now button at end of curriculum */}
+            <div className="flex justify-center mt-12">
+              <Button
+                data-ocid="cohort.curriculum.primary_button"
+                onClick={() => setApplyOpen(true)}
+                className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-12 h-13 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.2)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.35)] min-w-[220px]"
+              >
+                Enroll Now
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -3108,7 +3400,41 @@ function AboutPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
 
 // ── Courses Page ─────────────────────────────────────────────────────────────
 function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
-  const courses = [
+  const [activeTab, setActiveTab] = useState<"free" | "self-paced" | "cohort">(
+    "self-paced",
+  );
+
+  const freeCourses = [
+    {
+      title: "OutSystems Basics",
+      description:
+        "Get started with OutSystems — build your first app and understand the core development model.",
+      duration: "2 Hours",
+      icon: BookOpen,
+      link: "https://lowcademy.grafikart.fr",
+      ocid: "courses.free.item.1",
+    },
+    {
+      title: "OutSystems UI Fundamentals",
+      description:
+        "Learn how to build responsive, professional-looking screens using OutSystems UI framework.",
+      duration: "2.5 Hours",
+      icon: Layers,
+      link: "https://lowcademy.grafikart.fr",
+      ocid: "courses.free.item.2",
+    },
+    {
+      title: "Introduction to OutSystems Logic",
+      description:
+        "Understand how to build application logic, workflows, and integrations in OutSystems.",
+      duration: "2 Hours",
+      icon: Network,
+      link: "https://lowcademy.grafikart.fr",
+      ocid: "courses.free.item.3",
+    },
+  ];
+
+  const selfPacedCourses = [
     {
       title: "OutSystems Fundamentals",
       description:
@@ -3116,8 +3442,8 @@ function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
       level: "Beginner",
       levelColor: "bg-emerald-50 text-emerald-700 border border-emerald-200",
       duration: "6 Hours",
-      type: "Self-Paced",
       icon: BookOpen,
+      link: "https://lowcademy.grafikart.fr",
       ocid: "courses.catalog.item.1",
     },
     {
@@ -3127,8 +3453,8 @@ function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
       level: "Intermediate",
       levelColor: "bg-amber-50 text-amber-700 border border-amber-200",
       duration: "8 Hours",
-      type: "Self-Paced",
       icon: Layers,
+      link: "https://lowcademy.grafikart.fr",
       ocid: "courses.catalog.item.2",
     },
     {
@@ -3138,11 +3464,21 @@ function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
       level: "Advanced",
       levelColor: "bg-[#00D1FF]/10 text-[#0B1F3A] border border-[#00D1FF]/30",
       duration: "10 Hours",
-      type: "Self-Paced",
       icon: Globe,
+      link: "https://lowcademy.grafikart.fr",
       ocid: "courses.catalog.item.3",
     },
   ];
+
+  const cohortProgram = {
+    title: "OutSystems Career Accelerator",
+    description:
+      "A live mentor-led cohort designed to help developers transition into enterprise-grade OutSystems development.",
+    nextCohort: "June 2026",
+    duration: "6 Weeks",
+    seats: "Limited Seats Available",
+    link: "https://lowcademy.grafikart.fr",
+  };
 
   const differentiators = [
     {
@@ -3162,6 +3498,20 @@ function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
     },
   ];
 
+  const tabs: {
+    label: string;
+    value: "free" | "self-paced" | "cohort";
+    ocid: string;
+  }[] = [
+    { label: "Free Courses", value: "free", ocid: "courses.tab.free" },
+    {
+      label: "Self-Paced Programs",
+      value: "self-paced",
+      ocid: "courses.tab.self-paced",
+    },
+    { label: "Live Cohort", value: "cohort", ocid: "courses.tab.cohort" },
+  ];
+
   return (
     <div className="pt-16">
       {/* Hero */}
@@ -3178,86 +3528,216 @@ function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
             Self-Paced OutSystems Learning
           </h1>
           <p className="text-white/60 text-lg sm:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
-            Learn enterprise low-code development through structured self-paced
-            programs designed by Enterprise Software Architect Ankit Gangrade.
+            Learn enterprise low-code development through structured programs
+            designed by Enterprise Software Architect Ankit Gangrade.
           </p>
           <a href="#course-catalog">
             <Button
               data-ocid="courses.hero.primary_button"
               className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
             >
-              Start Learning
+              Browse Courses
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </a>
         </div>
       </section>
 
-      {/* Course Catalog */}
+      {/* Tab Navigation + Course Catalog */}
       <section
         id="course-catalog"
         data-ocid="courses.catalog.section"
-        className="bg-white py-20 lg:py-28"
+        className="bg-white py-16 lg:py-24"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Badge className="mb-4 bg-[#00D1FF]/10 text-[#0B1F3A] border-[#00D1FF]/20 text-xs font-semibold tracking-wider uppercase">
-              Course Catalog
-            </Badge>
-            <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-              Self-Paced Courses
-            </h2>
+          {/* Tab Nav */}
+          <div className="flex justify-center mb-12">
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.value;
+                return (
+                  <button
+                    type="button"
+                    key={tab.value}
+                    data-ocid={tab.ocid}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={[
+                      "whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border",
+                      isActive
+                        ? "bg-[#00D1FF] text-[#0B1F3A] border-[#00D1FF] shadow-[0_0_20px_rgba(0,209,255,0.4)] font-bold"
+                        : "bg-white text-gray-600 border-gray-200 hover:border-[#00D1FF]/50 hover:text-[#0B1F3A]",
+                    ].join(" ")}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {courses.map((course) => (
-              <div
-                key={course.title}
-                data-ocid={course.ocid}
-                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col"
-                style={{ borderTop: "3px solid #00D1FF" }}
-              >
-                <div className="p-8 flex-1 flex flex-col">
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="w-12 h-12 rounded-xl bg-[#00D1FF]/10 flex items-center justify-center">
-                      <course.icon className="text-[#00D1FF]" size={22} />
+
+          {/* Free Courses */}
+          {activeTab === "free" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {freeCourses.map((course) => (
+                <div
+                  key={course.title}
+                  data-ocid={course.ocid}
+                  className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-[#00D1FF]/40 transition-all duration-300 flex flex-col cursor-pointer"
+                  style={{ borderTop: "3px solid #00D1FF" }}
+                  onClick={() => window.open(course.link, "_blank")}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && window.open(course.link, "_blank")
+                  }
+                >
+                  <div className="p-8 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between mb-5">
+                      <div className="w-12 h-12 rounded-xl bg-[#00D1FF]/10 flex items-center justify-center">
+                        <course.icon className="text-[#00D1FF]" size={22} />
+                      </div>
+                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        Free
+                      </span>
                     </div>
-                    <span
-                      className={`text-xs font-semibold px-3 py-1 rounded-full ${course.levelColor}`}
-                    >
-                      {course.level}
-                    </span>
-                  </div>
-                  <h3 className="font-display font-bold text-[#0B1F3A] text-xl mb-3 leading-snug">
-                    {course.title}
-                  </h3>
-                  <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-6">
-                    {course.description}
-                  </p>
-                  <div className="flex items-center gap-5 mb-6 border-t border-gray-100 pt-5">
-                    <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                    <h3 className="font-display font-bold text-[#0B1F3A] text-xl mb-3 leading-snug">
+                      {course.title}
+                    </h3>
+                    <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-6">
+                      {course.description}
+                    </p>
+                    <div className="flex items-center gap-1.5 text-gray-500 text-xs mb-6 border-t border-gray-100 pt-5">
                       <Clock size={13} className="text-[#00D1FF]" />
                       <span>{course.duration}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-gray-500 text-xs">
-                      <UserCheck size={13} className="text-[#00D1FF]" />
-                      <span>{course.type}</span>
+                    <Button
+                      data-ocid={`${course.ocid}.button`}
+                      className="w-full bg-[#0B1F3A] hover:bg-[#0B1F3A]/90 text-white font-semibold h-10 rounded-lg transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(course.link, "_blank");
+                      }}
+                    >
+                      View Course
+                      <ChevronRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Self-Paced Programs */}
+          {activeTab === "self-paced" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {selfPacedCourses.map((course) => (
+                <div
+                  key={course.title}
+                  data-ocid={course.ocid}
+                  className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-[#00D1FF]/40 transition-all duration-300 flex flex-col cursor-pointer"
+                  style={{ borderTop: "3px solid #00D1FF" }}
+                  onClick={() => window.open(course.link, "_blank")}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && window.open(course.link, "_blank")
+                  }
+                >
+                  <div className="p-8 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between mb-5">
+                      <div className="w-12 h-12 rounded-xl bg-[#00D1FF]/10 flex items-center justify-center">
+                        <course.icon className="text-[#00D1FF]" size={22} />
+                      </div>
+                      <span
+                        className={`text-xs font-semibold px-3 py-1 rounded-full ${course.levelColor}`}
+                      >
+                        {course.level}
+                      </span>
+                    </div>
+                    <h3 className="font-display font-bold text-[#0B1F3A] text-xl mb-3 leading-snug">
+                      {course.title}
+                    </h3>
+                    <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-6">
+                      {course.description}
+                    </p>
+                    <div className="flex items-center gap-5 mb-6 border-t border-gray-100 pt-5">
+                      <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                        <Clock size={13} className="text-[#00D1FF]" />
+                        <span>{course.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                        <UserCheck size={13} className="text-[#00D1FF]" />
+                        <span>Self-Paced</span>
+                      </div>
+                    </div>
+                    <Button
+                      data-ocid={`${course.ocid}.button`}
+                      className="w-full bg-[#0B1F3A] hover:bg-[#0B1F3A]/90 text-white font-semibold h-10 rounded-lg transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(course.link, "_blank");
+                      }}
+                    >
+                      View Course
+                      <ChevronRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Live Cohort */}
+          {activeTab === "cohort" && (
+            <div className="flex justify-center">
+              <div
+                data-ocid="courses.cohort.card"
+                className="w-full max-w-2xl bg-gradient-to-br from-[#0B1F3A]/5 to-[#00D1FF]/5 border border-gray-200 rounded-2xl shadow-md overflow-hidden"
+              >
+                <div className="h-[3px] bg-[#00D1FF]" />
+                <div className="p-10">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-[#00D1FF]/10 text-[#0B1F3A] border border-[#00D1FF]/30 mb-6">
+                    <span className="w-2 h-2 rounded-full bg-[#00D1FF] animate-pulse" />
+                    Live Cohort
+                  </span>
+                  <h2 className="font-display font-black text-[#0B1F3A] text-3xl sm:text-4xl mb-4 leading-tight">
+                    {cohortProgram.title}
+                  </h2>
+                  <p className="text-gray-600 text-base leading-relaxed mb-8">
+                    {cohortProgram.description}
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                    <div className="flex items-center gap-2 text-gray-700 text-sm">
+                      <Calendar size={16} className="text-[#00D1FF] shrink-0" />
+                      <span>
+                        Next Cohort: <strong>{cohortProgram.nextCohort}</strong>
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-700 text-sm">
+                      <Clock size={16} className="text-[#00D1FF] shrink-0" />
+                      <span>
+                        Duration: <strong>{cohortProgram.duration}</strong>
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-700 text-sm">
+                      <Users size={16} className="text-[#00D1FF] shrink-0" />
+                      <span>
+                        <strong>{cohortProgram.seats}</strong>
+                      </span>
                     </div>
                   </div>
                   <Button
-                    data-ocid={`${course.ocid}.button`}
-                    className="w-full bg-[#0B1F3A] hover:bg-[#0B1F3A]/90 text-white font-semibold h-10 rounded-lg transition-colors"
+                    data-ocid="courses.cohort.primary_button"
+                    className="bg-[#0B1F3A] hover:bg-[#0B1F3A]/90 text-white font-bold px-8 h-12 rounded-lg shadow-md transition-all hover:shadow-lg"
+                    onClick={() => window.open(cohortProgram.link, "_blank")}
                   >
-                    View Course
-                    <ChevronRight className="ml-1 h-4 w-4" />
+                    View Cohort Details
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Learning Approach */}
+      {/* What Makes Lowcademy Courses Different */}
       <section
         data-ocid="courses.approach.section"
         className="bg-[#F7F9FC] py-20 lg:py-28"
@@ -3295,38 +3775,35 @@ function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
       {/* CTA */}
       <section
         data-ocid="courses.cta.section"
-        className="relative bg-[#0B1F3A] py-20 lg:py-28 overflow-hidden"
+        className="bg-[#0B1F3A] py-20 lg:py-28 relative overflow-hidden"
       >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 100%, rgba(0,209,255,0.07) 0%, transparent 60%)",
-          }}
-          aria-hidden="true"
-        />
+        <NetworkBackground />
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-display font-black text-white text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-6">
             Start Building Real Enterprise Skills
           </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              data-ocid="courses.cta.primary_button"
-              onClick={() => onNavigate("programs")}
-              className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
-            >
-              Explore Programs
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+          <p className="text-white/60 text-lg leading-relaxed mb-10">
+            Choose your learning path and start developing enterprise-grade
+            OutSystems expertise.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#course-catalog">
               <Button
-                data-ocid="courses.cta.secondary_button"
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 font-semibold text-base px-8 h-12 rounded-md bg-transparent transition-all"
+                data-ocid="courses.cta.primary_button"
+                className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-8 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
               >
-                View All Courses
+                Browse Courses
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </a>
+            <Button
+              data-ocid="courses.cta.secondary_button"
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10 font-semibold text-base px-8 h-12 rounded-md"
+              onClick={() => onNavigate("programs")}
+            >
+              View Programs
+            </Button>
           </div>
         </div>
       </section>
@@ -3337,26 +3814,42 @@ function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
 // ── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>("home");
+  const [leadFormOpen, setLeadFormOpen] = useState(false);
 
   const handleNavigate = (page: Page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "instant" });
   };
 
+  const openLeadForm = () => setLeadFormOpen(true);
+
   return (
     <div className="min-h-screen bg-white">
-      <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      <Header
+        currentPage={currentPage}
+        onNavigate={handleNavigate}
+        onOpenLeadForm={openLeadForm}
+      />
       <main>
         {currentPage === "home" ? (
           <>
-            <HeroSection />
+            <HeroSection onOpenLeadForm={openLeadForm} />
             <WhoHelpsSection />
+            <MeetTheArchitectSection onNavigate={handleNavigate} />
+            <HowYouCanLearnSection
+              onNavigate={handleNavigate}
+              onOpenLeadForm={openLeadForm}
+            />
             <WhySection />
-            <ProgramsSection />
-            <CorporateSection onNavigate={handleNavigate} />
-            <AboutSection />
+            <ForOrganizationsSection
+              onNavigate={handleNavigate}
+              onOpenLeadForm={openLeadForm}
+            />
             <BlogSection />
-            <CtaSection />
+            <CtaSection
+              onNavigate={handleNavigate}
+              onOpenLeadForm={openLeadForm}
+            />
           </>
         ) : currentPage === "about" ? (
           <AboutPage onNavigate={handleNavigate} />
@@ -3368,11 +3861,17 @@ export default function App() {
           <CoursesPage onNavigate={handleNavigate} />
         ) : currentPage === "cohort-details" ? (
           <CohortDetailsPage onNavigate={handleNavigate} />
+        ) : currentPage === "course-details" ? (
+          <CourseDetailsPage onNavigate={handleNavigate} />
         ) : (
           <CorporateTrainingPage />
         )}
       </main>
       <Footer onNavigate={handleNavigate} />
+      <LeadFormDialog
+        open={leadFormOpen}
+        onClose={() => setLeadFormOpen(false)}
+      />
     </div>
   );
 }
