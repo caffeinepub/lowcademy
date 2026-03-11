@@ -61,7 +61,9 @@ type Page =
   | "cohort-details"
   | "course-details"
   | "cohort-landing"
-  | "event";
+  | "event"
+  | "blog"
+  | "blog-detail";
 
 // ── Cohort Config (edit these values to update cohort details) ──────────────
 const COHORT_CONFIG = {
@@ -70,6 +72,144 @@ const COHORT_CONFIG = {
   duration: "8 Weeks",
   landingUrl: "#", // Update with real cohort landing page URL
 };
+
+// ── Blog Posts ────────────────────────────────────────────────────────────────
+const BLOG_POSTS = [
+  {
+    id: "domain-driven-design-outsystems",
+    tag: "Enterprise Architecture",
+    title: "Why Domain-Driven Design Matters in OutSystems Projects",
+    excerpt:
+      "DDD isn't just for traditional code. Learn how to apply domain boundaries and aggregate patterns when designing OutSystems applications.",
+    readTime: "8 min read",
+    date: "Mar 2025",
+    image:
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=300&fit=crop&q=80",
+    body: `Domain-Driven Design (DDD) is a philosophy that aligns software structure with business reality. In OutSystems projects, this alignment is critical — because low-code platforms accelerate development speed, but without intentional domain boundaries, you end up with tightly coupled modules that resist change.
+
+The first principle to apply is the Bounded Context. In OutSystems, each application in your factory should represent one bounded context. This means a Customer Management application owns all customer-related logic, data, and APIs. It does not reach into Order Management's entities. Instead, it consumes a well-defined service action or REST API.
+
+Aggregates map naturally to OutSystems Entities. Your Aggregate Root — the entity that enforces business rules — becomes the primary entity in your data model. Related entities like OrderLine, Address, or ContactDetail become dependent entities. The key discipline is never exposing dependent entities to external consumers; only the aggregate root's service actions cross bounded context boundaries.
+
+Application decomposition follows DDD's strategic patterns. OutSystems' forge components and reusable libraries are your Shared Kernel — stable, low-change components used across contexts. Meanwhile, your core domains get their own dedicated applications with strict API contracts. This separation means changes in one domain don't cascade across the platform.
+
+Value Objects — domain concepts with no identity of their own — appear as Structures in OutSystems. A Money structure, a DateRange structure, a Coordinates structure. These travel through service layers without carrying database identity, keeping your APIs clean and your domain concepts explicit.
+
+Finally, Domain Events transform how OutSystems applications communicate. Instead of synchronous service action calls, a Customer domain raises a CustomerOnboarded event. An Orders domain listens and responds independently. OutSystems' BPT (Business Process Technology) and Event-Driven Architecture patterns support this approach, enabling loose coupling that scales across large enterprise factories.`,
+  },
+  {
+    id: "ai-ready-systems-architect-guide",
+    tag: "AI in Software",
+    title: "The Enterprise Architect's Guide to AI-Ready Systems",
+    excerpt:
+      "AI integration isn't a feature — it's an architectural decision. How to design OutSystems apps that incorporate AI without technical debt.",
+    readTime: "12 min read",
+    date: "Feb 2025",
+    image:
+      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=300&fit=crop&q=80",
+    body: `Building AI-ready enterprise systems requires more than adding an API call to a language model. It requires architectural decisions that separate concerns, manage state, handle latency, and degrade gracefully when AI services are unavailable. Enterprise architects must think about these constraints before writing the first line of AI integration code.
+
+The first architectural principle is the AI Adapter Pattern. Your business logic should never call an AI provider directly. Instead, introduce an adapter layer — a service module in OutSystems that abstracts the AI provider. This means switching from OpenAI to Azure OpenAI to a locally hosted model requires changing one module, not hunting through business logic.
+
+Context Management is the second critical concern. Large Language Models are stateless by default; the conversation context must be managed by your application. Design a ConversationSession entity that stores the message history, session metadata, and any retrieved context. OutSystems' server actions can build and trim this context window before every AI call, keeping costs and latency predictable.
+
+Retrieval-Augmented Generation (RAG) transforms generic AI responses into enterprise-grade answers. Your OutSystems application maintains a vector store or structured knowledge base. Before each LLM call, retrieve the three most relevant documents and inject them into the prompt. This grounds the AI's response in your organization's actual data, dramatically reducing hallucinations.
+
+Latency handling separates production AI systems from prototypes. AI calls can take 2–30 seconds depending on model and context size. OutSystems' asynchronous BPT processes and Client Actions with optimistic UI patterns keep users informed and engaged during long-running AI operations. Never block the UI thread waiting for an AI response.
+
+Finally, design for graceful degradation. Define a Fallback Strategy for every AI feature. If the AI returns a confidence score below threshold — fall back to a rules-based response. If the AI service is unavailable — serve a cached response or a clear user message. Enterprise applications must function even when AI services are degraded, because business operations cannot pause for an API outage.`,
+  },
+  {
+    id: "outsystems-performance-patterns",
+    tag: "Low-Code Engineering",
+    title: "OutSystems Performance Patterns Every Architect Should Know",
+    excerpt:
+      "From aggregate queries to asynchronous timers — the performance patterns that separate professional OutSystems delivery from amateur builds.",
+    readTime: "10 min read",
+    date: "Jan 2025",
+    image:
+      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=300&fit=crop&q=80",
+    body: `Performance in OutSystems applications is an architectural discipline, not a post-deployment concern. The decisions made during design — how data is fetched, how screens are structured, how timers are deployed — determine whether an application serves hundreds or hundreds of thousands of users efficiently.
+
+Aggregate optimization is the single highest-impact performance practice in OutSystems. Every aggregate generates SQL. The default behavior fetches all columns from all joined tables. Instead, use the Output Properties panel to select only the columns your screen actually needs. For list screens, fetching 5 columns instead of 40 can reduce query time by 60-70% on large datasets.
+
+The N+1 Query Problem appears in OutSystems when developers nest aggregates inside ForEach loops. For every record in the outer list, a new database query executes. The solution is joining at the aggregate level or using a single aggregate that retrieves all necessary data upfront. Use the SQL tool when complex joins are needed that OutSystems' visual query builder cannot express cleanly.
+
+Screen preparation versus client actions represents a critical architectural choice for reactive web applications. Heavy server logic in OnInitialize blocks page load. Move slow operations to asynchronous client actions triggered after the page renders, providing immediate visual feedback while data loads in the background.
+
+Cache invalidation using OutSystems' built-in caching extends server action results across user sessions. A Product Catalog aggregate that doesn't change frequently can be cached for 5-10 minutes, eliminating redundant database calls across thousands of concurrent users. Design your cache keys carefully — include any parameters that affect the result set.
+
+Timer architecture separates background processing from user-facing request cycles. Long-running operations — sending emails, processing files, synchronizing external systems — belong in asynchronous timers, not in server actions triggered by UI events. Use the BPT (Business Process Technology) engine for operations that span multiple steps, enabling monitoring, error handling, and retry logic at the process level.`,
+  },
+  {
+    id: "migrating-legacy-to-outsystems",
+    tag: "Migration",
+    title:
+      "Migrating Legacy Applications to OutSystems: An Architect's Playbook",
+    excerpt:
+      "Migration is never just a technical exercise — it's a business transformation. The strategic and technical patterns that make OutSystems migrations succeed.",
+    readTime: "11 min read",
+    date: "Dec 2024",
+    image:
+      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=300&fit=crop&q=80",
+    body: `Legacy migration projects fail not because of technical complexity, but because of unclear scope, insufficient domain analysis, and underestimating the gap between what legacy systems do and what they were designed to do. An OutSystems migration requires both architectural discipline and change management rigor.
+
+Start with a Domain Capability Map. Before touching OutSystems, document every capability your legacy system provides — not screens, not tables, but business capabilities. Inventory Management, Order Processing, Customer Onboarding, Reporting. Each capability becomes a candidate for a dedicated OutSystems application in your new architecture. This map drives every subsequent decision.
+
+The Strangler Fig Pattern is the safest migration approach for enterprise systems. Rather than a big-bang rewrite, you build new OutSystems modules alongside the legacy system and gradually route traffic from old to new. A façade layer intercepts requests, directing them to the OutSystems implementation when ready, or falling back to the legacy system. Users experience no disruption; the legacy system is strangled incrementally.
+
+Data migration deserves its own project phase. Legacy databases rarely map cleanly to a domain-driven OutSystems data model. You will encounter denormalized tables, null-heavy columns, binary-encoded status fields, and decades of accumulated technical debt. Build a dedicated ETL pipeline that transforms legacy data into your new model. Run it in shadow mode — syncing data bidirectionally — before cutover to validate data integrity.
+
+Integration complexity is consistently underestimated. Legacy systems are connected to dozens of downstream consumers: reporting tools, ERP systems, partner APIs, internal utilities. Each of these consumers must be accommodated during migration. OutSystems' REST and SOAP exposure capabilities allow you to publish the same interfaces your legacy system exposed, buying time to migrate consumers on their own schedule.
+
+Define a clear Definition of Done for each migration wave. Include not just functional parity, but performance benchmarks, security audit results, and user acceptance test sign-off. Migration waves that lack clear completion criteria tend to drag on indefinitely, consuming budget without delivering business value.`,
+  },
+  {
+    id: "odc-vs-traditional-outsystems",
+    tag: "ODC",
+    title:
+      "OutSystems Developer Cloud vs Traditional OutSystems: What Architects Need to Know",
+    excerpt:
+      "ODC isn't just a new deployment model — it's a fundamentally different architecture. What changes, what stays the same, and how to plan your transition.",
+    readTime: "9 min read",
+    date: "Nov 2024",
+    image:
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=300&fit=crop&q=80",
+    body: `OutSystems Developer Cloud (ODC) represents the platform's architectural evolution toward cloud-native, containerized deployment. For architects who have built careers on traditional OutSystems, ODC introduces new patterns that require deliberate learning and adaptation.
+
+The most fundamental shift is the move from a monolithic runtime to independent containerized applications. In traditional OutSystems, all applications in an environment share a single runtime process and database. In ODC, each application runs in its own container with its own isolated data store. This eliminates the runtime coupling that traditional OutSystems architectures struggled with.
+
+Service-to-service communication changes significantly. Traditional OutSystems allows direct entity references across applications via public entities — a pattern that creates tight coupling but enables rapid development. ODC eliminates cross-application entity references entirely. Every data exchange must go through explicitly defined service APIs. This enforces the clean architecture boundaries that DDD advocates recommend.
+
+The ODC asset library replaces the traditional OutSystems Forge and reusable modules. Assets are versioned independently and consumed as explicit dependencies. This versioning discipline was optional in traditional OutSystems (many teams shared components without versioning). In ODC, it is mandatory, which improves governance at the cost of increased coordination overhead.
+
+Authentication and authorization are handled differently in ODC. Built-in support for external identity providers, PKCE flows, and fine-grained API authorization replace the traditional End Users entity and group-based role management. Architects must redesign their authentication architecture for ODC migrations, not just lift-and-shift existing role structures.
+
+The ODC portal and deployment pipeline replace Service Center and LifeTime. CI/CD integration, environment promotion, and monitoring are redesigned for cloud-native operations. Teams accustomed to traditional OutSystems deployment processes need training and process redesign, not just technical migration. The platform change is as much an operations transformation as a development one.`,
+  },
+  {
+    id: "ai-assisted-workflows-enterprise",
+    tag: "Agentic AI",
+    title: "Building AI-Assisted Workflows in Enterprise Applications",
+    excerpt:
+      "Agentic AI moves beyond single-shot prompts into multi-step, tool-using workflows. How to architect these systems for enterprise reliability and observability.",
+    readTime: "13 min read",
+    date: "Oct 2024",
+    image:
+      "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&h=300&fit=crop&q=80",
+    body: `Agentic AI systems differ fundamentally from traditional AI integrations. Instead of a single prompt-response cycle, an agentic system plans multi-step workflows, uses tools to retrieve data or execute actions, evaluates intermediate results, and iterates toward a goal. Building these systems in enterprise OutSystems applications requires new architectural patterns and careful attention to observability and control.
+
+The Agent Executor Pattern structures the core agentic loop. Your OutSystems application hosts an Agent Server Action that accepts a goal and a tool registry. The action sends the goal to an LLM, receives a plan (often expressed as tool calls), executes the requested tools, returns results to the LLM, and repeats until the LLM signals completion. This loop must have a maximum iteration count and timeout to prevent runaway execution.
+
+Tool design is the most critical architectural decision in agentic systems. Each tool is an OutSystems server action exposed to the agent. Tools must have single, clear responsibilities. A QueryCustomerBalance tool, a CheckInventory tool, a SubmitPurchaseOrder tool. Ambiguous or multi-purpose tools cause agent confusion and unpredictable behavior. Document each tool with a precise description — the LLM uses this description to decide when to call it.
+
+Human-in-the-loop checkpoints prevent autonomous agents from taking irreversible actions without oversight. Before the agent executes a high-stakes tool (submitting an order, modifying account data, sending external communications), pause the workflow and present a confirmation step to the user. OutSystems' BPT human tasks provide exactly this pattern — the workflow suspends, a task is assigned to a user, and execution resumes only after explicit approval.
+
+Observability infrastructure separates production agentic systems from demos. Log every LLM call, every tool invocation, every intermediate reasoning step in a dedicated AgentExecutionTrace entity. Include timestamps, token counts, tool inputs and outputs, and any error conditions. This trace enables debugging, cost analysis, and audit compliance — requirements that enterprise systems cannot bypass.
+
+Failure mode design is non-negotiable. Agents can enter loops, produce malformed tool calls, exceed context limits, or receive API errors. Each failure mode requires an explicit handling strategy. A maximum retry count per tool. A fallback prompt when tool calls fail parsing. A circuit breaker that suspends the agent and notifies a human operator when error rates exceed threshold. Resilient agentic systems are designed for failure, not just for the happy path.`,
+  },
+];
 
 // ── Network SVG Background ──────────────────────────────────────────────────
 const NODES_LARGE = [
@@ -348,6 +488,18 @@ function Header({ currentPage, onNavigate, onOpenLeadForm }: HeaderProps) {
             </button>
             <button
               type="button"
+              data-ocid="nav.blog.link"
+              onClick={() => onNavigate("blog")}
+              className={`text-sm font-medium transition-colors duration-150 ${
+                currentPage === "blog" || currentPage === "blog-detail"
+                  ? "text-[#00D1FF]"
+                  : "text-white/70 hover:text-white"
+              }`}
+            >
+              Blog
+            </button>
+            <button
+              type="button"
               data-ocid="nav.event.link"
               onClick={() => onNavigate("event")}
               className={`text-sm font-medium transition-colors duration-150 ${
@@ -464,6 +616,21 @@ function Header({ currentPage, onNavigate, onOpenLeadForm }: HeaderProps) {
               }`}
             >
               Programs
+            </button>
+            <button
+              type="button"
+              data-ocid="nav.blog.link"
+              onClick={() => {
+                onNavigate("blog");
+                setMobileOpen(false);
+              }}
+              className={`text-sm font-medium py-2 transition-colors ${
+                currentPage === "blog" || currentPage === "blog-detail"
+                  ? "text-[#00D1FF]"
+                  : "text-white/80 hover:text-white"
+              }`}
+            >
+              Blog
             </button>
             <button
               type="button"
@@ -994,39 +1161,14 @@ function ForOrganizationsSection({
 }
 
 // ── Blog Section ─────────────────────────────────────────────────────────────
-function BlogSection() {
-  const posts = [
-    {
-      tag: "Enterprise Architecture",
-      title: "Why Domain-Driven Design Matters in OutSystems Projects",
-      excerpt:
-        "DDD isn't just for traditional code. Learn how to apply domain boundaries and aggregate patterns when designing OutSystems applications.",
-      readTime: "8 min read",
-      date: "Mar 2025",
-      image:
-        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=300&fit=crop&q=80",
-    },
-    {
-      tag: "AI in Software",
-      title: "The Enterprise Architect's Guide to AI-Ready Systems",
-      excerpt:
-        "AI integration isn't a feature — it's an architectural decision. How to design OutSystems apps that incorporate AI without technical debt.",
-      readTime: "12 min read",
-      date: "Feb 2025",
-      image:
-        "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=300&fit=crop&q=80",
-    },
-    {
-      tag: "Low-Code Engineering",
-      title: "OutSystems Performance Patterns Every Architect Should Know",
-      excerpt:
-        "From aggregate queries to asynchronous timers — the performance patterns that separate professional OutSystems delivery from amateur builds.",
-      readTime: "10 min read",
-      date: "Jan 2025",
-      image:
-        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=300&fit=crop&q=80",
-    },
-  ];
+function BlogSection({
+  onNavigate,
+  onSelectedBlogId,
+}: {
+  onNavigate: (page: Page) => void;
+  onSelectedBlogId: (id: string) => void;
+}) {
+  const posts = BLOG_POSTS.slice(0, 3);
 
   return (
     <section className="bg-white py-20 lg:py-28">
@@ -1041,10 +1183,20 @@ function BlogSection() {
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {posts.map((post, i) => (
-            <article
-              key={post.title}
+            <div
+              key={post.id}
               data-ocid={`blog.item.${i + 1}`}
-              className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-card card-hover"
+              className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-card card-hover cursor-pointer group"
+              onClick={() => {
+                onSelectedBlogId(post.id);
+                onNavigate("blog-detail");
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onSelectedBlogId(post.id);
+                  onNavigate("blog-detail");
+                }
+              }}
             >
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -1059,7 +1211,7 @@ function BlogSection() {
                 <Badge className="mb-4 bg-[#0B1F3A]/5 text-[#0B1F3A] border-0 text-xs">
                   {post.tag}
                 </Badge>
-                <h3 className="font-display font-bold text-[#0B1F3A] text-lg leading-snug mb-3">
+                <h3 className="font-display font-bold text-[#0B1F3A] text-lg leading-snug mb-3 group-hover:text-[#00D1FF] transition-colors">
                   {post.title}
                 </h3>
                 <p className="text-gray-500 text-sm leading-relaxed mb-6">
@@ -1070,8 +1222,19 @@ function BlogSection() {
                   <span>{post.readTime}</span>
                 </div>
               </div>
-            </article>
+            </div>
           ))}
+        </div>
+        <div className="text-center mt-12">
+          <Button
+            data-ocid="blog.view_all.button"
+            variant="outline"
+            className="border-[#0B1F3A] text-[#0B1F3A] hover:bg-[#0B1F3A] hover:text-white px-8 h-11 font-semibold transition-all"
+            onClick={() => onNavigate("blog")}
+          >
+            View All Articles
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </div>
     </section>
@@ -1403,6 +1566,16 @@ function Footer({ onNavigate }: { onNavigate: (page: Page) => void }) {
                   className="text-white/50 hover:text-white text-sm transition-colors cursor-pointer"
                 >
                   Contact
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  data-ocid="footer.blog.link"
+                  onClick={() => onNavigate("blog")}
+                  className="text-white/50 hover:text-white text-sm transition-colors cursor-pointer"
+                >
+                  Blog
                 </button>
               </li>
             </ul>
@@ -5017,10 +5190,346 @@ function EventPage({
   );
 }
 
+// ── Blog Page ─────────────────────────────────────────────────────────────────
+function BlogPage({
+  onNavigate,
+  onSelectedBlogId,
+}: {
+  onNavigate: (page: Page) => void;
+  onSelectedBlogId: (id: string) => void;
+}) {
+  const [activeTag, setActiveTag] = useState<string>("All");
+  const tags = [
+    "All",
+    "Enterprise Architecture",
+    "AI in Software",
+    "Low-Code Engineering",
+    "Migration",
+    "ODC",
+    "Agentic AI",
+  ];
+  const filtered =
+    activeTag === "All"
+      ? BLOG_POSTS
+      : BLOG_POSTS.filter((p) => p.tag === activeTag);
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero */}
+      <section
+        data-ocid="blog.hero.section"
+        className="bg-[#0B1F3A] pt-28 pb-20 relative overflow-hidden"
+      >
+        <NetworkBackground />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+            Knowledge Base
+          </p>
+          <h1 className="font-display font-black text-white text-4xl sm:text-5xl lg:text-6xl tracking-tight mb-6">
+            Insights on Enterprise Software
+          </h1>
+          <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+            Deep-dives on OutSystems architecture, enterprise system design,
+            AI-assisted development, and the engineering thinking that separates
+            professional delivery from amateur builds.
+          </p>
+        </div>
+      </section>
+
+      {/* Filter pills */}
+      <section className="bg-white py-10 border-b border-gray-100 sticky top-16 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap gap-3 justify-center">
+            {tags.map((tag, i) => (
+              <button
+                key={tag}
+                type="button"
+                data-ocid={`blog.filter.tab.${i + 1}`}
+                onClick={() => setActiveTag(tag)}
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
+                  activeTag === tag
+                    ? "bg-[#0B1F3A] text-[#00D1FF]"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Grid */}
+      <section className="bg-[#F7F9FC] py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-3 gap-6">
+            {filtered.map((post, i) => (
+              <div
+                key={post.id}
+                data-ocid={`blog.item.${i + 1}`}
+                className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-card card-hover cursor-pointer group"
+                onClick={() => {
+                  onSelectedBlogId(post.id);
+                  onNavigate("blog-detail");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    onSelectedBlogId(post.id);
+                    onNavigate("blog-detail");
+                  }
+                }}
+              >
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3A]/40 to-transparent" />
+                </div>
+                <div className="h-1 bg-gradient-to-r from-[#00D1FF] to-[#0066cc]" />
+                <div className="p-7">
+                  <Badge className="mb-4 bg-[#0B1F3A]/5 text-[#0B1F3A] border-0 text-xs">
+                    {post.tag}
+                  </Badge>
+                  <h3 className="font-display font-bold text-[#0B1F3A] text-lg leading-snug mb-3 group-hover:text-[#00A8CC] transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-6">
+                    {post.excerpt}
+                  </p>
+                  <div className="flex items-center justify-between text-gray-400 text-xs">
+                    <span>{post.date}</span>
+                    <span>{post.readTime}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          {filtered.length === 0 && (
+            <div className="text-center py-20 text-gray-400">
+              No articles found for this category.
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CTA strip */}
+      <section className="bg-[#0B1F3A] py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+            Go Beyond Reading
+          </p>
+          <h2 className="font-display font-bold text-white text-3xl sm:text-4xl mb-4">
+            Apply These Concepts in a Live Cohort
+          </h2>
+          <p className="text-white/60 text-base mb-8">
+            Explore architect-led live cohort programs where you go from reading
+            about enterprise patterns to actually building them.
+          </p>
+          <Button
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold px-8 h-12"
+            onClick={() => onNavigate("courses")}
+          >
+            Explore Programs
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ── Blog Detail Page ──────────────────────────────────────────────────────────
+function BlogDetailPage({
+  onNavigate,
+  selectedBlogId,
+  onSelectedBlogId,
+}: {
+  onNavigate: (page: Page) => void;
+  selectedBlogId: string;
+  onSelectedBlogId?: (id: string) => void;
+}) {
+  const post = BLOG_POSTS.find((p) => p.id === selectedBlogId) ?? BLOG_POSTS[0];
+  const related = BLOG_POSTS.filter((p) => p.id !== post.id).slice(0, 3);
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Hero */}
+      <section data-ocid="blog_detail.hero.section" className="relative">
+        <div className="relative h-80 md:h-96 overflow-hidden">
+          <img
+            src={post.image}
+            alt={post.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3A]/90 via-[#0B1F3A]/50 to-[#0B1F3A]/20" />
+          <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10">
+            <div className="max-w-4xl mx-auto w-full">
+              <Badge className="mb-4 bg-[#00D1FF]/20 text-[#00D1FF] border border-[#00D1FF]/30 text-xs font-semibold">
+                {post.tag}
+              </Badge>
+              <h1 className="font-display font-black text-white text-2xl sm:text-3xl lg:text-4xl leading-tight mb-4 max-w-3xl">
+                {post.title}
+              </h1>
+              <div className="flex items-center gap-4 text-white/60 text-sm">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="h-4 w-4" />
+                  {post.date}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" />
+                  {post.readTime}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Back button */}
+      <div className="bg-white border-b border-gray-100 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <button
+            type="button"
+            data-ocid="blog_detail.back.button"
+            onClick={() => onNavigate("blog")}
+            className="inline-flex items-center gap-2 text-sm text-[#0B1F3A] font-semibold hover:text-[#00D1FF] transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Blog
+          </button>
+        </div>
+      </div>
+
+      {/* Article body */}
+      <section data-ocid="blog_detail.article.section" className="py-14">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="prose prose-lg max-w-none">
+            {post.body.split(/\n\n/).map((paragraph) => (
+              <p
+                key={paragraph.slice(0, 40)}
+                className="text-gray-700 leading-relaxed text-base sm:text-lg mb-6"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+
+          {/* Author card */}
+          <div
+            data-ocid="blog_detail.author.card"
+            className="mt-14 p-6 rounded-xl border border-gray-100 bg-[#F7F9FC] flex gap-5 items-start"
+          >
+            <img
+              src="https://static.wixstatic.com/media/83c4df_891db97947eb462b8549e5e152249333~mv2.avif/v1/fill/w_372,h_584,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Who-Is-Ankit-Gangrade.avif"
+              alt="Ankit Gangrade"
+              className="w-16 h-16 rounded-full object-cover object-top flex-shrink-0"
+            />
+            <div>
+              <p className="text-xs text-[#00D1FF] font-semibold tracking-widest uppercase mb-1">
+                Written by
+              </p>
+              <h3 className="font-display font-bold text-[#0B1F3A] text-lg mb-1">
+                Ankit Gangrade
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed">
+                Enterprise Software Architect specializing in OutSystems, system
+                design, and enterprise application delivery. Principal
+                Consultant at XaltiQ Technologies and founder of Lowcademy.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        data-ocid="blog_detail.related.section"
+        className="bg-[#F7F9FC] py-16"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <p className="text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-2">
+              Keep Reading
+            </p>
+            <h2 className="font-display font-bold text-[#0B1F3A] text-2xl sm:text-3xl">
+              Related Articles
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {related.map((rpost, i) => (
+              <div
+                key={rpost.id}
+                data-ocid={`blog_detail.related.item.${i + 1}`}
+                className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-card card-hover cursor-pointer group"
+                onClick={() => {
+                  onSelectedBlogId?.(rpost.id);
+                  onNavigate("blog-detail");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    onSelectedBlogId?.(rpost.id);
+                    onNavigate("blog-detail");
+                  }
+                }}
+              >
+                <div className="relative h-40 overflow-hidden">
+                  <img
+                    src={rpost.image}
+                    alt={rpost.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3A]/40 to-transparent" />
+                </div>
+                <div className="h-0.5 bg-gradient-to-r from-[#00D1FF] to-[#0066cc]" />
+                <div className="p-5">
+                  <Badge className="mb-3 bg-[#0B1F3A]/5 text-[#0B1F3A] border-0 text-xs">
+                    {rpost.tag}
+                  </Badge>
+                  <h3 className="font-display font-bold text-[#0B1F3A] text-base leading-snug mb-2 group-hover:text-[#00A8CC] transition-colors">
+                    {rpost.title}
+                  </h3>
+                  <div className="flex items-center justify-between text-gray-400 text-xs mt-3">
+                    <span>{rpost.date}</span>
+                    <span>{rpost.readTime}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="bg-[#0B1F3A] py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-[#00D1FF] text-sm font-semibold tracking-widest uppercase mb-3">
+            Ready to Go Deeper?
+          </p>
+          <h2 className="font-display font-bold text-white text-3xl sm:text-4xl mb-4">
+            Want to Learn Enterprise Architecture Hands-On?
+          </h2>
+          <p className="text-white/60 text-base mb-8">
+            Join an architect-led live cohort where you build real enterprise
+            applications using OutSystems, ODC, and AI-assisted development
+            practices.
+          </p>
+          <Button
+            data-ocid="blog_detail.cta.primary_button"
+            className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold px-8 h-12"
+            onClick={() => onNavigate("cohort-landing")}
+          >
+            Check-out Next Cohort
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 // ── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>("home");
   const [leadFormOpen, setLeadFormOpen] = useState(false);
+  const [selectedBlogId, setSelectedBlogId] = useState<string>("");
 
   const handleNavigate = (page: Page) => {
     setCurrentPage(page);
@@ -5051,7 +5560,10 @@ export default function App() {
               onNavigate={handleNavigate}
               onOpenLeadForm={openLeadForm}
             />
-            <BlogSection />
+            <BlogSection
+              onNavigate={handleNavigate}
+              onSelectedBlogId={setSelectedBlogId}
+            />
             <CtaSection onNavigate={handleNavigate} />
           </>
         ) : currentPage === "about" ? (
@@ -5075,6 +5587,17 @@ export default function App() {
           <EventPage
             onNavigate={handleNavigate}
             onOpenLeadForm={openLeadForm}
+          />
+        ) : currentPage === "blog" ? (
+          <BlogPage
+            onNavigate={handleNavigate}
+            onSelectedBlogId={setSelectedBlogId}
+          />
+        ) : currentPage === "blog-detail" ? (
+          <BlogDetailPage
+            onNavigate={handleNavigate}
+            selectedBlogId={selectedBlogId}
+            onSelectedBlogId={setSelectedBlogId}
           />
         ) : (
           <CorporateTrainingPage onOpenLeadForm={openLeadForm} />
