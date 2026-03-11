@@ -1,3 +1,9 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,10 +20,12 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
+  Bot,
   Briefcase,
   Building2,
   Calendar,
   CheckCircle2,
+  CheckSquare,
   ChevronRight,
   Clock,
   Cloud,
@@ -51,7 +59,9 @@ type Page =
   | "contact"
   | "courses"
   | "cohort-details"
-  | "course-details";
+  | "course-details"
+  | "cohort-landing"
+  | "event";
 
 // ── Cohort Config (edit these values to update cohort details) ──────────────
 const COHORT_CONFIG = {
@@ -329,12 +339,24 @@ function Header({ currentPage, onNavigate, onOpenLeadForm }: HeaderProps) {
                 setMobileOpen(false);
               }}
               className={`text-sm font-medium transition-colors duration-150 ${
-                currentPage === "programs"
+                currentPage === "programs" || currentPage === "cohort-landing"
                   ? "text-[#00D1FF]"
                   : "text-white/70 hover:text-white"
               }`}
             >
               Programs
+            </button>
+            <button
+              type="button"
+              data-ocid="nav.event.link"
+              onClick={() => onNavigate("event")}
+              className={`text-sm font-medium transition-colors duration-150 ${
+                currentPage === "event"
+                  ? "text-[#00D1FF]"
+                  : "text-white/70 hover:text-white"
+              }`}
+            >
+              Event
             </button>
             <button
               type="button"
@@ -436,12 +458,27 @@ function Header({ currentPage, onNavigate, onOpenLeadForm }: HeaderProps) {
                 setMobileOpen(false);
               }}
               className={`text-sm font-medium py-2 transition-colors ${
-                currentPage === "programs"
+                currentPage === "programs" || currentPage === "cohort-landing"
                   ? "text-[#00D1FF]"
                   : "text-white/80 hover:text-white"
               }`}
             >
               Programs
+            </button>
+            <button
+              type="button"
+              data-ocid="nav.event.link"
+              onClick={() => {
+                onNavigate("event");
+                setMobileOpen(false);
+              }}
+              className={`text-sm font-medium py-2 transition-colors ${
+                currentPage === "event"
+                  ? "text-[#00D1FF]"
+                  : "text-white/80 hover:text-white"
+              }`}
+            >
+              Event
             </button>
             <button
               type="button"
@@ -473,7 +510,7 @@ function Header({ currentPage, onNavigate, onOpenLeadForm }: HeaderProps) {
 }
 
 // ── Hero Section ────────────────────────────────────────────────────────────
-function HeroSection({ onOpenLeadForm }: { onOpenLeadForm: () => void }) {
+function HeroSection({ onNavigate }: { onNavigate: (page: Page) => void }) {
   return (
     <section
       id="home"
@@ -523,10 +560,10 @@ function HeroSection({ onOpenLeadForm }: { onOpenLeadForm: () => void }) {
           <Button
             data-ocid="hero.join_cohort.button"
             variant="outline"
-            onClick={onOpenLeadForm}
+            onClick={() => onNavigate("cohort-landing")}
             className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 font-semibold text-base px-8 h-12 rounded-md bg-transparent transition-all"
           >
-            Join Next Cohort
+            Check-out Next Cohort
           </Button>
         </div>
 
@@ -752,7 +789,7 @@ function HowYouCanLearnSection({
         "Small-group deep learning programs focused on architecture thinking, enterprise system design, and real-world delivery practices.",
       button: {
         label: "View Next Cohort",
-        action: () => onNavigate("programs"),
+        action: () => onNavigate("cohort-landing"),
         ocid: "learn.cohort.button",
         variant: "default" as const,
       },
@@ -1044,10 +1081,8 @@ function BlogSection() {
 // ── Final CTA ────────────────────────────────────────────────────────────────
 function CtaSection({
   onNavigate,
-  onOpenLeadForm,
 }: {
   onNavigate: (page: Page) => void;
-  onOpenLeadForm: () => void;
 }) {
   return (
     <section className="relative bg-[#0B1F3A] py-24 lg:py-32 overflow-hidden">
@@ -1084,11 +1119,11 @@ function CtaSection({
           </Button>
           <Button
             data-ocid="cta.join_cohort.button"
-            onClick={onOpenLeadForm}
+            onClick={() => onNavigate("cohort-landing")}
             variant="outline"
             className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 font-semibold text-base px-8 h-12 bg-transparent transition-all"
           >
-            Join Next Cohort
+            Check Out Next Cohort
           </Button>
         </div>
       </div>
@@ -1447,10 +1482,10 @@ function ProgramsPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
           </p>
           <Button
             data-ocid="programs.hero.primary_button"
-            onClick={() => onNavigate("course-details")}
+            onClick={() => onNavigate("cohort-landing")}
             className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-10 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)] mb-8"
           >
-            Apply for the Next Cohort
+            Check out Next Cohort
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           <div className="flex flex-wrap gap-3 justify-center">
@@ -1877,10 +1912,10 @@ function ProgramsPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
           </p>
           <Button
             data-ocid="programs.cta.primary_button"
-            onClick={() => onNavigate("course-details")}
+            onClick={() => onNavigate("cohort-landing")}
             className="bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-base px-10 h-12 rounded-md shadow-[0_0_30px_rgba(0,209,255,0.25)] transition-all hover:shadow-[0_0_40px_rgba(0,209,255,0.4)]"
           >
-            Apply Now
+            Check out Next Cohort
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
@@ -2437,7 +2472,7 @@ function CohortDetailsPage({
 
             <div className="space-y-0">
               {allDays.map((d, idx) => {
-                const tags = getActivityTags(d.activities);
+                const _tags = getActivityTags(d.activities);
                 const topics = extractTopics(d.activities);
                 const dayDate = getDayDate(d.day);
                 const isLast = idx === allDays.length - 1;
@@ -2465,21 +2500,51 @@ function CohortDetailsPage({
                       <div
                         className={`flex-1 rounded-xl border mb-0 ${d.isFinal ? "bg-[#0B1F3A] border-[#00D1FF]/40" : "bg-[#F7F9FC] border-gray-200"} p-5 shadow-sm`}
                       >
-                        {/* Header row: title + date */}
+                        {/* Header row: title + date + final badge */}
                         <div className="flex items-start justify-between gap-3 mb-3">
                           <h3
                             className={`font-display font-bold text-base leading-snug ${d.isFinal ? "text-[#00D1FF]" : "text-[#0B1F3A]"}`}
                           >
                             Day {d.day} — {d.title}
                           </h3>
-                          <span
-                            className={`text-xs font-semibold whitespace-nowrap mt-0.5 px-2 py-0.5 rounded-full border ${d.isFinal ? "text-[#00D1FF]/80 border-[#00D1FF]/30 bg-[#00D1FF]/10" : "text-[#00D1FF] border-[#00D1FF]/30 bg-[#00D1FF]/5"}`}
-                          >
-                            {dayDate}
-                          </span>
+                          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                            {d.isFinal && (
+                              <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-[#00D1FF] text-[#0B1F3A] shadow-sm">
+                                ✓ Final Assessment
+                              </span>
+                            )}
+                            <span
+                              className={`text-xs font-semibold whitespace-nowrap px-2 py-0.5 rounded-full border ${d.isFinal ? "text-[#00D1FF]/80 border-[#00D1FF]/30 bg-[#00D1FF]/10" : "text-[#00D1FF] border-[#00D1FF]/30 bg-[#00D1FF]/5"}`}
+                            >
+                              {dayDate}
+                            </span>
+                          </div>
                         </div>
 
-                        {/* Learning */}
+                        {/* Live Sessions highlight */}
+                        {d.activities.filter((a) =>
+                          a.startsWith("Live Session:"),
+                        ).length > 0 && (
+                          <div
+                            className={`mb-3 pl-3 border-l-2 border-[#00D1FF] rounded-r-md py-2 ${d.isFinal ? "bg-[#00D1FF]/10" : "bg-[#00D1FF]/5"}`}
+                          >
+                            <p className="text-xs font-bold text-[#00D1FF] mb-1">
+                              🎙️ Live Session
+                            </p>
+                            {d.activities
+                              .filter((a) => a.startsWith("Live Session:"))
+                              .map((a) => (
+                                <p
+                                  key={a}
+                                  className={`text-sm leading-snug ${d.isFinal ? "text-white/90" : "text-[#0B1F3A]"}`}
+                                >
+                                  {a.replace("Live Session:", "").trim()}
+                                </p>
+                              ))}
+                          </div>
+                        )}
+
+                        {/* Learning & Outcome */}
                         <p
                           className={`text-sm mb-2 ${d.isFinal ? "text-white/70" : "text-gray-700"}`}
                         >
@@ -2491,7 +2556,6 @@ function CohortDetailsPage({
                           {topics}
                         </p>
 
-                        {/* Outcome */}
                         <p
                           className={`text-sm mb-3 ${d.isFinal ? "text-[#00D1FF]/80" : "text-[#0B1F3A]/70"}`}
                         >
@@ -2503,17 +2567,71 @@ function CohortDetailsPage({
                           {d.outcome}
                         </p>
 
-                        {/* Activity type tags — faded indicators */}
-                        <div className="flex flex-wrap gap-2 pt-1 border-t border-gray-100/50">
-                          {tags.map((tag) => (
-                            <span
-                              key={tag.label}
-                              className={`inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full font-medium opacity-70 ${d.isFinal ? "bg-white/10 text-white/70 border border-white/20" : "bg-gray-100 text-gray-500 border border-gray-200"}`}
+                        {/* Followed By section */}
+                        {(() => {
+                          const lower = d.activities.map((a) =>
+                            a.toLowerCase(),
+                          );
+                          const followedBy: {
+                            label: string;
+                            icon: string;
+                            colorClass: string;
+                          }[] = [];
+                          if (
+                            lower.some(
+                              (a) =>
+                                a.startsWith("assignment") ||
+                                (a.startsWith("hands-on") &&
+                                  a.includes("assignment")),
+                            )
+                          )
+                            followedBy.push({
+                              label: "Assignment",
+                              icon: "📝",
+                              colorClass:
+                                "bg-amber-100 text-amber-700 border-amber-200",
+                            });
+                          if (
+                            lower.some(
+                              (a) =>
+                                a.startsWith("exercise") ||
+                                a.startsWith("hands-on"),
+                            )
+                          )
+                            followedBy.push({
+                              label: "Exercise",
+                              icon: "🛠️",
+                              colorClass:
+                                "bg-blue-100 text-blue-700 border-blue-200",
+                            });
+                          if (lower.some((a) => a.startsWith("quiz")))
+                            followedBy.push({
+                              label: "Quiz",
+                              icon: "❓",
+                              colorClass:
+                                "bg-green-100 text-green-700 border-green-200",
+                            });
+                          if (followedBy.length === 0) return null;
+                          return (
+                            <div
+                              className={`flex flex-wrap items-center gap-2 pt-2.5 border-t ${d.isFinal ? "border-white/10" : "border-gray-200"}`}
                             >
-                              {tag.icon} {tag.label}
-                            </span>
-                          ))}
-                        </div>
+                              <span
+                                className={`text-xs font-semibold ${d.isFinal ? "text-white/50" : "text-gray-400"} mr-0.5`}
+                              >
+                                Followed By:
+                              </span>
+                              {followedBy.map((fb) => (
+                                <span
+                                  key={fb.label}
+                                  className={`inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full font-semibold border ${d.isFinal ? "bg-white/10 text-white/80 border-white/20" : fb.colorClass}`}
+                                >
+                                  {fb.icon} {fb.label}
+                                </span>
+                              ))}
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -4019,6 +4137,886 @@ function CoursesPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
   );
 }
 
+// ── CohortLandingPage ─────────────────────────────────────────────────────────
+const cohortConfig = {
+  enrollmentMode: "lead-capture" as "lead-capture" | "direct-enrollment",
+  checkoutUrl: "#",
+  price: "₹ Contact for Pricing",
+  seatsAvailable: "Limited",
+  programTitle: "OutSystems + ODC + Agentic AI Career Accelerator",
+  programSubtitle:
+    "Build enterprise-grade applications using OutSystems, explore the OutSystems Developer Cloud, and learn how AI-assisted applications are designed using Agentic AI approaches.",
+  startDate: "June 2026",
+  duration: "6 Weeks",
+  schedule: "Weekends, 10:00 AM – 12:30 PM IST",
+  mode: "Live Online",
+  overview:
+    "This cohort is designed for software professionals who want to build modern enterprise applications using OutSystems.\n\nParticipants will learn how to design scalable applications, explore the OutSystems Developer Cloud (ODC), and understand how modern AI-assisted workflows can be implemented using Agentic AI approaches.\n\nThe program focuses on practical development experience and architectural thinking used in real production environments.",
+};
+
+function CohortLandingPage({
+  onNavigate,
+  onOpenLeadForm,
+}: {
+  onNavigate: (page: Page) => void;
+  onOpenLeadForm: () => void;
+}) {
+  const infoBadges = [
+    { label: "Start Date", value: cohortConfig.startDate },
+    { label: "Duration", value: cohortConfig.duration },
+    { label: "Schedule", value: cohortConfig.schedule },
+    { label: "Mode", value: cohortConfig.mode },
+  ];
+
+  const handlePrimaryAction = () => {
+    if (cohortConfig.enrollmentMode === "lead-capture") {
+      onOpenLeadForm();
+    } else {
+      window.open(cohortConfig.checkoutUrl, "_blank");
+    }
+  };
+
+  const overviewParagraphs = cohortConfig.overview.split("\n\n");
+
+  return (
+    <div>
+      {/* SECTION 1 — HERO */}
+      <section
+        data-ocid="cohort_landing.hero.section"
+        className="relative bg-[#0B1F3A] pt-28 pb-20 lg:pt-36 lg:pb-28 overflow-hidden"
+      >
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-5"
+            style={{
+              background:
+                "radial-gradient(circle, #00D1FF 0%, transparent 70%)",
+              transform: "translate(30%, -30%)",
+            }}
+          />
+          <div
+            className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-5"
+            style={{
+              background:
+                "radial-gradient(circle, #00D1FF 0%, transparent 70%)",
+              transform: "translate(-30%, 30%)",
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-[#00D1FF]/10 border border-[#00D1FF]/20 rounded-full px-4 py-1.5 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00D1FF] animate-pulse" />
+            <span className="text-[#00D1FF] text-xs font-semibold tracking-wider uppercase">
+              Live Cohort Program
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-5">
+            {cohortConfig.programTitle}
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-white/70 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+            {cohortConfig.programSubtitle}
+          </p>
+
+          {/* Info badges row */}
+          <div className="flex flex-wrap justify-center gap-3 mb-10">
+            {infoBadges.map((badge) => (
+              <div
+                key={badge.label}
+                className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5"
+              >
+                <span className="text-white/50 text-xs font-medium uppercase tracking-wide">
+                  {badge.label}
+                </span>
+                <span className="w-px h-3 bg-white/20" />
+                <span className="text-white text-sm font-semibold">
+                  {badge.value}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              type="button"
+              data-ocid="cohort_landing.apply.primary_button"
+              onClick={handlePrimaryAction}
+              className="px-8 py-3.5 bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-semibold text-sm rounded-md transition-colors shadow-lg shadow-[#00D1FF]/20 min-w-[180px]"
+            >
+              {cohortConfig.enrollmentMode === "lead-capture"
+                ? "Apply for Cohort"
+                : "Enroll Now"}
+            </button>
+            <button
+              type="button"
+              data-ocid="cohort_landing.view_agenda.secondary_button"
+              onClick={() => onNavigate("cohort-details")}
+              className="px-8 py-3.5 bg-transparent border border-white/20 hover:border-white/40 text-white font-semibold text-sm rounded-md transition-colors min-w-[180px]"
+            >
+              View Full Agenda
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 2 — PROGRAM OVERVIEW */}
+      <section
+        data-ocid="cohort_landing.overview.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <span className="inline-block text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-3">
+              Program Overview
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0B1F3A]">
+              About This Cohort
+            </h2>
+            <div className="mt-4 w-12 h-0.5 bg-[#00D1FF] mx-auto" />
+          </div>
+          <div className="space-y-5">
+            {overviewParagraphs.map((para) => (
+              <p
+                key={para.slice(0, 40)}
+                className="text-gray-600 text-base sm:text-lg leading-relaxed"
+              >
+                {para}
+              </p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 3 — WHO THIS COHORT IS FOR */}
+      <section
+        data-ocid="cohort_landing.audience.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-block text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-3">
+              Ideal Audience
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0B1F3A]">
+              Who This Cohort Is For
+            </h2>
+            <div className="mt-4 w-12 h-0.5 bg-[#00D1FF] mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: "Code2",
+                title: "Software Developers",
+                description:
+                  "Developers transitioning into enterprise low-code development and exploring modern application platforms.",
+              },
+              {
+                icon: "Briefcase",
+                title: "Engineering Professionals",
+                description:
+                  "Developers working on real production systems who want to strengthen architectural thinking and system design skills.",
+              },
+              {
+                icon: "Layers",
+                title: "OutSystems Developers",
+                description:
+                  "Professionals expanding their expertise into OutSystems Developer Cloud and modern enterprise application architecture.",
+              },
+              {
+                icon: "Cpu",
+                title: "Technology Professionals",
+                description:
+                  "Engineers interested in understanding how AI-assisted applications and modern development workflows are designed.",
+              },
+            ].map((card, i) => {
+              const icons: Record<string, React.ReactNode> = {
+                Code2: <Code2 className="w-6 h-6 text-[#00D1FF]" />,
+                Briefcase: <Briefcase className="w-6 h-6 text-[#00D1FF]" />,
+                Layers: <Layers className="w-6 h-6 text-[#00D1FF]" />,
+                Cpu: <Cpu className="w-6 h-6 text-[#00D1FF]" />,
+              };
+              return (
+                <div
+                  key={card.title}
+                  data-ocid={`cohort_landing.audience.item.${i + 1}`}
+                  className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-transparent hover:border-[#00D1FF]/30"
+                >
+                  <div className="w-12 h-12 bg-[#0B1F3A]/5 rounded-lg flex items-center justify-center mb-4">
+                    {icons[card.icon]}
+                  </div>
+                  <h3 className="text-base font-bold text-[#0B1F3A] mb-2">
+                    {card.title}
+                  </h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">
+                    {card.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4 — WHAT YOU WILL LEARN */}
+      <section
+        data-ocid="cohort_landing.outcomes.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-block text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-3">
+              Learning Outcomes
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0B1F3A]">
+              What You Will Learn
+            </h2>
+            <div className="mt-4 w-12 h-0.5 bg-[#00D1FF] mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: <Building2 className="w-6 h-6 text-[#00D1FF]" />,
+                title: "Building Enterprise Applications with OutSystems",
+                description:
+                  "Learn how to design and build scalable applications using the OutSystems platform.",
+              },
+              {
+                icon: <Cloud className="w-6 h-6 text-[#00D1FF]" />,
+                title: "Understanding OutSystems Developer Cloud (ODC)",
+                description:
+                  "Explore how cloud-native development works within the modern OutSystems ecosystem.",
+              },
+              {
+                icon: <Bot className="w-6 h-6 text-[#00D1FF]" />,
+                title: "Designing Applications with AI-Assisted Workflows",
+                description:
+                  "Understand how agentic AI concepts can be integrated into modern enterprise applications.",
+              },
+              {
+                icon: <CheckSquare className="w-6 h-6 text-[#00D1FF]" />,
+                title: "Enterprise Development Best Practices",
+                description:
+                  "Learn real-world engineering practices used in production environments.",
+              },
+              {
+                icon: <TrendingUp className="w-6 h-6 text-[#00D1FF]" />,
+                title: "Career Growth in the OutSystems Ecosystem",
+                description:
+                  "Understand how developers progress from platform usage to architectural roles.",
+              },
+            ].map((feature, i) => (
+              <div
+                key={feature.title}
+                data-ocid={`cohort_landing.outcomes.item.${i + 1}`}
+                className="bg-[#F7F9FC] rounded-xl p-6 border border-gray-100 hover:border-[#00D1FF]/30 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 bg-[#0B1F3A]/5 rounded-lg flex items-center justify-center mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="text-sm font-bold text-[#0B1F3A] mb-2 leading-snug">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 5 — CURRICULUM PREVIEW */}
+      <section
+        data-ocid="cohort_landing.curriculum.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <span className="inline-block text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-3">
+              Program Curriculum
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0B1F3A]">
+              Program Curriculum
+            </h2>
+            <div className="mt-4 w-12 h-0.5 bg-[#00D1FF] mx-auto" />
+          </div>
+          <div className="space-y-5 text-gray-600 text-base sm:text-lg leading-relaxed mb-10">
+            <p>
+              The cohort follows a structured learning journey across multiple
+              live sessions. Each session focuses on a specific aspect of
+              enterprise application development and system design.
+            </p>
+            <p>
+              Participants attend live sessions where concepts are explained,
+              demonstrated, and discussed in depth. After each session,
+              participants complete guided exercises using pre-recorded
+              walkthroughs and assignments.
+            </p>
+            <p>
+              These exercises help reinforce the concepts covered during the
+              live sessions and prepare participants for the next session. To
+              explore the complete day-by-day learning journey, you can view the
+              full program agenda.
+            </p>
+          </div>
+          <div className="text-center">
+            <button
+              type="button"
+              data-ocid="cohort_landing.view_agenda.button"
+              onClick={() => onNavigate("cohort-details")}
+              className="px-8 py-3.5 bg-transparent border-2 border-[#0B1F3A] text-[#0B1F3A] font-semibold text-sm rounded-md hover:bg-[#0B1F3A] hover:text-white transition-colors"
+            >
+              View Full Agenda
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 6 — LEARNING STRUCTURE */}
+      <section
+        data-ocid="cohort_landing.learning_structure.section"
+        className="bg-[#0B1F3A] py-20 lg:py-28 relative overflow-hidden"
+      >
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-5"
+            style={{
+              background:
+                "radial-gradient(circle, #00D1FF 0%, transparent 70%)",
+              transform: "translate(30%, -30%)",
+            }}
+          />
+        </div>
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <span className="inline-block text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-3">
+              How It Works
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+              Learning Structure
+            </h2>
+            <div className="mt-4 w-12 h-0.5 bg-[#00D1FF] mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            {[
+              {
+                step: 1,
+                title: "Live Session",
+                description:
+                  "Concepts are explained through live sessions where architectural thinking and development practices are demonstrated.",
+              },
+              {
+                step: 2,
+                title: "Guided Practice",
+                description:
+                  "Participants follow structured walkthroughs and demonstrations that reinforce the concepts introduced during the live session.",
+              },
+              {
+                step: 3,
+                title: "Assignments",
+                description:
+                  "Participants complete hands-on development exercises designed to strengthen practical understanding.",
+              },
+              {
+                step: 4,
+                title: "Review Session",
+                description:
+                  "Key implementation decisions and architectural considerations are discussed and reviewed.",
+              },
+            ].map((item) => (
+              <div
+                key={item.step}
+                data-ocid={`cohort_landing.learning_structure.item.${item.step}`}
+                className="relative bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#00D1FF]/30 hover:bg-white/8 transition-all duration-300"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#00D1FF] text-[#0B1F3A] font-bold text-base flex items-center justify-center mb-4 shadow-lg shadow-[#00D1FF]/30">
+                  {item.step}
+                </div>
+                <h3 className="text-white font-bold text-base mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-white/60 text-sm leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-white/50 text-sm italic">
+            This learning cycle continues throughout the duration of the cohort.
+          </p>
+        </div>
+      </section>
+
+      {/* SECTION 7 — INSTRUCTOR */}
+      <section
+        data-ocid="cohort_landing.instructor.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-block text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-3">
+              Your Guide
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0B1F3A]">
+              Meet Your Instructor
+            </h2>
+            <div className="mt-4 w-12 h-0.5 bg-[#00D1FF] mx-auto" />
+          </div>
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-56 lg:w-64 flex-shrink-0">
+                <img
+                  src="https://static.wixstatic.com/media/83c4df_891db97947eb462b8549e5e152249333~mv2.avif/v1/fill/w_372,h_584,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Who-Is-Ankit-Gangrade.avif"
+                  alt="Ankit Gangrade"
+                  className="w-full h-64 md:h-full object-cover object-top"
+                />
+              </div>
+              <div className="flex-1 p-8 flex flex-col justify-center">
+                <div className="inline-flex items-center gap-2 bg-[#00D1FF]/10 border border-[#00D1FF]/20 rounded-full px-3 py-1 mb-4 self-start">
+                  <span className="text-[#00D1FF] text-xs font-semibold tracking-wider uppercase">
+                    Cohort Lead
+                  </span>
+                </div>
+                <h3 className="text-2xl font-bold text-[#0B1F3A] mb-1">
+                  Ankit Gangrade
+                </h3>
+                <p className="text-[#00D1FF] text-sm font-semibold mb-5">
+                  Enterprise Software Architect
+                </p>
+                <p className="text-gray-600 text-base leading-relaxed">
+                  Ankit specializes in OutSystems architecture and enterprise
+                  application delivery. The program focuses on practical
+                  architectural thinking, real-world development practices, and
+                  insights gained from production environments. Participants
+                  learn not only platform usage but also how modern enterprise
+                  systems are designed and delivered.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 8 — SEATS & PRICING */}
+      <section
+        data-ocid="cohort_landing.pricing.section"
+        className="bg-white py-20 lg:py-28"
+      >
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="inline-block text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-3">
+            Enrollment
+          </span>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0B1F3A] mb-10">
+            Seats &amp; Pricing
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+            <div className="bg-[#F7F9FC] rounded-xl p-8 border border-gray-100">
+              <p className="text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-2">
+                Program Fee
+              </p>
+              <p className="text-3xl font-bold text-[#0B1F3A]">
+                {cohortConfig.price}
+              </p>
+            </div>
+            <div className="bg-[#F7F9FC] rounded-xl p-8 border border-gray-100">
+              <p className="text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-2">
+                Seats Available
+              </p>
+              <p className="text-3xl font-bold text-[#0B1F3A]">
+                {cohortConfig.seatsAvailable}
+              </p>
+            </div>
+          </div>
+          <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-lg mx-auto">
+            Seats are intentionally limited to ensure meaningful interaction,
+            deeper discussion, and direct feedback during the cohort sessions.
+          </p>
+          <button
+            type="button"
+            data-ocid="cohort_landing.pricing.primary_button"
+            onClick={handlePrimaryAction}
+            className="px-10 py-4 bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-sm rounded-md transition-colors shadow-lg shadow-[#00D1FF]/20"
+          >
+            {cohortConfig.enrollmentMode === "lead-capture"
+              ? "Apply Now"
+              : "Enroll Now"}
+          </button>
+        </div>
+      </section>
+
+      {/* SECTION 9 — FAQ */}
+      <section
+        data-ocid="cohort_landing.faq.section"
+        className="bg-[#F7F9FC] py-20 lg:py-28"
+      >
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-block text-[#00D1FF] text-xs font-semibold tracking-widest uppercase mb-3">
+              Common Questions
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0B1F3A]">
+              Frequently Asked Questions
+            </h2>
+            <div className="mt-4 w-12 h-0.5 bg-[#00D1FF] mx-auto" />
+          </div>
+          <Accordion type="single" collapsible className="space-y-3">
+            {[
+              {
+                q: "Do I need prior OutSystems experience?",
+                a: "No prior OutSystems experience is required. The cohort is structured to accommodate both beginners and professionals with some familiarity with the platform.",
+              },
+              {
+                q: "Are sessions recorded?",
+                a: "Yes, all live sessions are recorded. Participants get access to recordings for review and self-paced study after each session.",
+              },
+              {
+                q: "How long do I get access to course materials?",
+                a: "Participants retain access to all course materials, recordings, and resources for an extended period after the cohort concludes.",
+              },
+              {
+                q: "Will there be assignments during the cohort?",
+                a: "Yes, each session is followed by hands-on development exercises designed to reinforce the concepts covered and strengthen practical skills.",
+              },
+              {
+                q: "Will I get project work?",
+                a: "Yes — both minor and major project work will be included throughout the cohort. You will also receive complete project implementation support to ensure you can confidently build and deliver real enterprise applications.",
+              },
+              {
+                q: "Will I get doubt clearing sessions?",
+                a: "Yes — dedicated doubt clearing classes will be scheduled separately, giving you focused time to resolve questions and deepen your understanding of the concepts covered.",
+              },
+              {
+                q: "Will I get interview support?",
+                a: "Yes — a one-on-one mock interview will be conducted by Ankit himself once you feel ready for your job interview. This gives you direct feedback from an enterprise architect on your interview readiness.",
+              },
+            ].map((faq, i) => (
+              <AccordionItem
+                key={faq.q}
+                value={`faq-${i + 1}`}
+                data-ocid={`cohort_landing.faq.item.${i + 1}`}
+                className="bg-white rounded-xl border border-gray-100 px-6 shadow-sm"
+              >
+                <AccordionTrigger className="text-[#0B1F3A] font-semibold text-sm text-left hover:text-[#00D1FF] hover:no-underline py-5">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-500 text-sm leading-relaxed pb-5">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* SECTION 10 — FINAL CTA */}
+      <section
+        data-ocid="cohort_landing.final_cta.section"
+        className="bg-[#0B1F3A] py-20 lg:py-28 relative overflow-hidden"
+      >
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute top-1/2 left-1/2 w-[700px] h-[700px] rounded-full opacity-5"
+            style={{
+              background:
+                "radial-gradient(circle, #00D1FF 0%, transparent 70%)",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        </div>
+        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-5">
+            Secure Your Seat in the Upcoming Cohort
+          </h2>
+          <p className="text-white/60 text-base sm:text-lg leading-relaxed mb-10 max-w-xl mx-auto">
+            Join a focused group of professionals learning how modern enterprise
+            applications are built.
+          </p>
+          <button
+            type="button"
+            data-ocid="cohort_landing.final_cta.primary_button"
+            onClick={handlePrimaryAction}
+            className="px-10 py-4 bg-[#00D1FF] hover:bg-[#00bbee] text-[#0B1F3A] font-bold text-sm rounded-md transition-colors shadow-lg shadow-[#00D1FF]/20"
+          >
+            {cohortConfig.enrollmentMode === "lead-capture"
+              ? "Apply Now"
+              : "Enroll Now"}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ── Event Page ───────────────────────────────────────────────────────────────
+function EventPage({
+  onNavigate: _onNavigate,
+  onOpenLeadForm,
+}: {
+  onNavigate: (page: Page) => void;
+  onOpenLeadForm: () => void;
+}) {
+  const whoForCards = [
+    {
+      title: "OutSystems Developers",
+      desc: "Developers looking to strengthen their platform knowledge and get real architectural guidance from a practicing architect.",
+    },
+    {
+      title: "Career Switchers",
+      desc: "Professionals exploring OutSystems as a career path who want live insights and honest answers from someone actively working in the field.",
+    },
+    {
+      title: "Engineering Students",
+      desc: "Students preparing to enter enterprise software development and looking for real-world context they can't get from documentation.",
+    },
+    {
+      title: "Technology Professionals",
+      desc: "Anyone involved in software delivery who wants to understand how enterprise applications are truly built and maintained.",
+    },
+  ];
+
+  const learnCards = [
+    {
+      title: "Live OutSystems Architecture Walkthrough",
+      desc: "See how real enterprise applications are structured and designed by a practicing architect — not a simplified tutorial.",
+    },
+    {
+      title: "OutSystems Developer Cloud (ODC) Overview",
+      desc: "Understand how ODC differs from the traditional platform and where it fits in modern enterprise delivery.",
+    },
+    {
+      title: "Agentic AI in Enterprise Apps",
+      desc: "A practical introduction to how AI-assisted workflows are being integrated into OutSystems applications today.",
+    },
+    {
+      title: "Common OutSystems Mistakes",
+      desc: "Learn the architectural mistakes developers make and how to avoid them before they become production problems.",
+    },
+    {
+      title: "Career Path in the OutSystems Ecosystem",
+      desc: "Understand how developers grow from platform users to architects and what skills matter most at each stage.",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section
+        data-ocid="event.hero.section"
+        className="relative overflow-hidden"
+        style={{ background: "#0B1F3A" }}
+      >
+        {/* Decorative grid background */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(0,209,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,209,255,0.3) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0B1F3A]" />
+
+        <div className="relative max-w-5xl mx-auto px-6 py-24 text-center">
+          <span
+            className="inline-block mb-4 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase"
+            style={{
+              background: "rgba(0,209,255,0.12)",
+              color: "#00D1FF",
+              border: "1px solid rgba(0,209,255,0.3)",
+            }}
+          >
+            Live Online Event
+          </span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+            OutSystems Live Q&A
+            <br />+ Demo Session
+          </h1>
+          <p className="text-lg md:text-xl text-white/75 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Join a live interactive session with Enterprise Software Architect
+            Ankit Gangrade — get your OutSystems and enterprise development
+            questions answered in real time.
+          </p>
+
+          {/* Info Pills */}
+          <div className="flex flex-wrap justify-center gap-3 mb-10">
+            {[
+              { label: "Date", value: "April 15, 2026" },
+              { label: "Time", value: "7:00 PM – 9:00 PM IST" },
+              { label: "Duration", value: "2 Hours" },
+              { label: "Mode", value: "Online — Live" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                  color: "#fff",
+                }}
+              >
+                <span style={{ color: "#00D1FF" }}>{item.label}:</span>
+                <span>{item.value}</span>
+              </div>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            data-ocid="event.join_now.primary_button"
+            onClick={onOpenLeadForm}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-md font-bold text-base transition-all hover:scale-105 hover:shadow-lg"
+            style={{ background: "#00D1FF", color: "#0B1F3A" }}
+          >
+            Join Now
+          </button>
+        </div>
+      </section>
+
+      {/* Who Is This For */}
+      <section
+        data-ocid="event.who_for.section"
+        className="py-20 px-6"
+        style={{ background: "#0B1F3A" }}
+      >
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Who Is This For
+            </h2>
+            <p className="text-white/60 text-lg max-w-xl mx-auto">
+              This session is designed for anyone who works with or wants to
+              understand OutSystems and enterprise development.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {whoForCards.map((card) => (
+              <div
+                key={card.title}
+                className="rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 group"
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor =
+                    "rgba(0,209,255,0.4)";
+                  (e.currentTarget as HTMLDivElement).style.boxShadow =
+                    "0 8px 30px rgba(0,209,255,0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor =
+                    "rgba(255,255,255,0.1)";
+                  (e.currentTarget as HTMLDivElement).style.boxShadow =
+                    "0 4px 20px rgba(0,0,0,0.3)";
+                }}
+              >
+                <div
+                  className="w-2 h-2 rounded-full mb-3"
+                  style={{ background: "#00D1FF" }}
+                />
+                <h3 className="text-white font-bold text-lg mb-2">
+                  {card.title}
+                </h3>
+                <p className="text-white/65 text-sm leading-relaxed">
+                  {card.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What You Will Learn */}
+      <section
+        data-ocid="event.learn.section"
+        className="py-20 px-6"
+        style={{ background: "#F7F9FC" }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <h2
+              className="text-3xl md:text-4xl font-bold mb-4"
+              style={{ color: "#0B1F3A" }}
+            >
+              What You Will Learn
+            </h2>
+            <p className="text-gray-500 text-lg max-w-xl mx-auto">
+              A focused, practical session covering the topics that matter most
+              for OutSystems practitioners.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {learnCards.map((card, i) => (
+              <div
+                key={card.title}
+                className="rounded-xl p-6 bg-white transition-all duration-300 hover:-translate-y-1"
+                style={{
+                  border: "1px solid #e5e7eb",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor =
+                    "rgba(0,209,255,0.4)";
+                  (e.currentTarget as HTMLDivElement).style.boxShadow =
+                    "0 8px 30px rgba(0,209,255,0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor =
+                    "#e5e7eb";
+                  (e.currentTarget as HTMLDivElement).style.boxShadow =
+                    "0 2px 12px rgba(0,0,0,0.07)";
+                }}
+              >
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center mb-4 text-sm font-bold"
+                  style={{
+                    background: "rgba(0,209,255,0.12)",
+                    color: "#00D1FF",
+                  }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <h3
+                  className="font-bold text-base mb-2"
+                  style={{ color: "#0B1F3A" }}
+                >
+                  {card.title}
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  {card.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA at bottom */}
+          <div className="text-center mt-14">
+            <p className="text-gray-500 mb-6">
+              Seats are limited. Reserve your spot today.
+            </p>
+            <button
+              type="button"
+              onClick={onOpenLeadForm}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-md font-bold text-base transition-all hover:scale-105"
+              style={{ background: "#0B1F3A", color: "#00D1FF" }}
+            >
+              Register for Free
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 // ── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>("home");
@@ -4041,7 +5039,7 @@ export default function App() {
       <main>
         {currentPage === "home" ? (
           <>
-            <HeroSection onOpenLeadForm={openLeadForm} />
+            <HeroSection onNavigate={handleNavigate} />
             <WhoHelpsSection />
             <MeetTheArchitectSection onNavigate={handleNavigate} />
             <HowYouCanLearnSection
@@ -4054,10 +5052,7 @@ export default function App() {
               onOpenLeadForm={openLeadForm}
             />
             <BlogSection />
-            <CtaSection
-              onNavigate={handleNavigate}
-              onOpenLeadForm={openLeadForm}
-            />
+            <CtaSection onNavigate={handleNavigate} />
           </>
         ) : currentPage === "about" ? (
           <AboutPage onNavigate={handleNavigate} />
@@ -4067,10 +5062,20 @@ export default function App() {
           <ContactPage onNavigate={handleNavigate} />
         ) : currentPage === "courses" ? (
           <CoursesPage onNavigate={handleNavigate} />
+        ) : currentPage === "cohort-landing" ? (
+          <CohortLandingPage
+            onNavigate={handleNavigate}
+            onOpenLeadForm={openLeadForm}
+          />
         ) : currentPage === "cohort-details" ? (
           <CohortDetailsPage onNavigate={handleNavigate} />
         ) : currentPage === "course-details" ? (
           <CourseDetailsPage onNavigate={handleNavigate} />
+        ) : currentPage === "event" ? (
+          <EventPage
+            onNavigate={handleNavigate}
+            onOpenLeadForm={openLeadForm}
+          />
         ) : (
           <CorporateTrainingPage onOpenLeadForm={openLeadForm} />
         )}
